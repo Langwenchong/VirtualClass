@@ -163,7 +163,7 @@ export default {
       return clock;
     },
     discussion() {
-      this.$router.push({ name: "Discussion" });
+      this.$router.push({ name: "TopicList" });
     },
     getFile() {
       var username = sessionStorage.getItem("userName");

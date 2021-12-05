@@ -6,8 +6,8 @@ import login from '@/components/Welcome/login.vue'
 import register from '@/components/Welcome/register.vue'
 import forget from '@/components/Welcome/forget.vue'
 import DashBoard from '@/components/DashBoard/DashBoard.vue'
-// import Recommend from '@/components/DashBoard/Recommend/Recommend.vue'
-import Discussion from '@/components/DashBoard/Discussion/Discussion.vue'
+import Recommend from '@/components/DashBoard/Recommend/Recommend.vue'
+// import Discussion from '@/components/DashBoard/Discussion/Discussion.vue'
 import Account from '@/components/DashBoard/Account/Account.vue'
 import self from '@/components/DashBoard/Account/self.vue'
 import editself from '@/components/DashBoard/Account/editself.vue'
@@ -20,7 +20,8 @@ import Index from '@/components/DashBoard/Index.vue'
 import log from '@/components/DashBoard/Recommend/Course/log.vue'
 import Calendar from '@/components/DashBoard/Recommend/Course/Calendar.vue'
 import Mind from '@/components/DashBoard/Recommend/Course/Mind.vue'
-import Comment from '@/components/DashBoard/Comment/index.vue'
+// import Comment from '@/components/DashBoard/Comment/index.vue'
+import TopicList from '@/components/DashBoard/Recommend/Discussion/TopicList.vue'
 
 Vue.use(Router)
 
@@ -68,11 +69,11 @@ export default new Router({
           name: 'Index',
           component: Index,
         },
-        // {
-        //     path: 'Recommend',
-        //     name: 'Recommend',
-        //     component: Recommend
-        //   },
+        {
+          path: 'Recommend',
+          name: 'Recommend',
+          component: Recommend
+        },
         {
           path: 'CourseSettings',
           name: 'CourseSettings',
@@ -88,17 +89,17 @@ export default new Router({
           name: 'Mind',
           component: Mind
         },
-        {
-          path: 'Discussion',
-          name: 'Discussion',
-          component: Discussion
-        },
+        // {
+        //   path: 'Discussion',
+        //   name: 'Discussion',
+        //   component: Discussion
+        // },
 
-        {
-          path: 'Comment',
-          name: 'Comment',
-          component: Comment
-        },
+        // {
+        //   path: 'Comment',
+        //   name: 'Comment',
+        //   component: Comment
+        // },
         {
           path: 'Account',
           name: 'Account',
@@ -140,6 +141,11 @@ export default new Router({
           name: 'CourseList',
           component: CourseList,
         },
+        {
+          path: 'TopicList',
+          name: 'TopicList',
+          component: TopicList
+        }
       ]
     }
   ]

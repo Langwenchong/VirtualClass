@@ -191,7 +191,7 @@ export default {
             "。您现在正在使用游客身份！"
         )
       });
-      this.$router.push("/Dashboard/Index");
+      this.$router.push("/Dashboard/Recommend");
     }
   }
 };

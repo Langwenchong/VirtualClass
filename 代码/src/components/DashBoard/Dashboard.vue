@@ -225,7 +225,7 @@ export default {
     },
     goto(i) {
       if (i === 1) {
-        this.$router.push({ name: "Index" });
+        this.$router.push({ name: "Recommend" });
       } else if (i === 2) {
         this.$router.push({ name: "self" });
       }
@@ -252,7 +252,7 @@ export default {
       } else {
         document.documentElement.style.setProperty(
           "--background1",
-          "rgba(247, 247, 247, 1)"
+          "#eee"
         );
         document.documentElement.style.setProperty("--background2", "#fff");
         document.documentElement.style.setProperty("--background3", "#f8f9fb");
