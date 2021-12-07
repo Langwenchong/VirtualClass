@@ -23,6 +23,7 @@ import Mind from '@/components/DashBoard/Recommend/Course/Mind.vue'
 // import Comment from '@/components/DashBoard/Comment/index.vue'
 import TopicList from '@/components/DashBoard/Recommend/Discussion/TopicList.vue'
 import TopicEditor from '@/components/DashBoard/Recommend/Discussion/TopicEditor.vue'
+import Topicbbs from '@/components/DashBoard/Recommend/Discussion/Topicbbs.vue'
 
 Vue.use(Router)
 
@@ -151,6 +152,11 @@ export default new Router({
           path: 'TopicEditor',
           name: 'TopicEditor',
           component: TopicEditor
+        },
+        {
+          path: 'Topicbbs',
+          name: 'Topicbbs',
+          component: Topicbbs,
         }
       ]
     }

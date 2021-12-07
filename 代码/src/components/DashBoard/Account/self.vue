@@ -91,29 +91,29 @@ export default {
           this.subtitle = `未填写`;
           this.name = sessionStorage.getItem("userName");
         } else {
-          console.log(data)
-          if (data.link != ``&&data.link != null) {
+          console.log(data);
+          if (data.link != `` && data.link != null) {
             this.link = data.link;
             // console.log(data);
           } else {
             this.link = `未填写`;
           }
-          if (data.grade != ``&&data.grade != null) {
+          if (data.grade != `` && data.grade != null) {
             this.grade = data.grade;
           } else {
             this.grade = `未填写`;
           }
-          if (data.address != ``&&data.addresss != null) {
+          if (data.address != `` && data.address != null) {
             this.address = data.address;
           } else {
             this.address = `未填写`;
           }
-          if (data.name != ``&&data.name != null) {
+          if (data.name != `` && data.name != null) {
             this.name = data.name;
           } else {
             this.name = sessionStorage.getItem("userName");
           }
-          if (data.subtitle != ``&&data.subtitle != null) {
+          if (data.subtitle != `` && data.subtitle != null) {
             this.subtitle = data.subtitle;
           } else {
             this.subtitle = `未填写`;
