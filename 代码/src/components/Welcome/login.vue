@@ -2,7 +2,9 @@
   <div id="login">
     <div class="header">
       <span>登录</span>
-      <router-link :to="{name:'register'}" class="link">没有帐号？ 点此注册</router-link>
+      <router-link :to="{ name: 'register' }" class="link"
+        >没有帐号？ 点此注册</router-link
+      >
     </div>
     <div class="wrapper">
       <el-form
@@ -30,15 +32,25 @@
           ></el-input>
         </el-form-item>
         <el-form-item class="submit">
-          <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
+          <el-button type="primary" @click="submitForm('ruleForm')"
+            >登录</el-button
+          >
           <el-button @click="resetForm('ruleForm')">重置</el-button>
-          <el-button type="success" id="visitor" @click="visitorLogin">游客登录</el-button>
+          <el-button type="success" id="visitor" @click="visitorLogin"
+            >游客登录</el-button
+          >
         </el-form-item>
       </el-form>
-      <router-link :to="{name:'forget'}" class="link" id="forget">已有帐号，忘记密码？</router-link>
+      <router-link :to="{ name: 'forget' }" class="link" id="forget"
+        >已有帐号，忘记密码？</router-link
+      >
     </div>
     <div class="team">
-      <img id="team-logo" src="../../../static/images/team-logo.png" alt="team-logo" />
+      <img
+        id="team-logo"
+        src="../../../static/images/team-logo.png"
+        alt="team-logo"
+      />
       <b>感谢以下contributors:</b>
       <div class="contributors">
         <div class="person">
@@ -79,29 +91,31 @@ export default {
     return {
       ruleForm: {
         username: "",
-        pass: ""
+        pass: "",
       },
       rules: {
         username: [{ validator: validateUsername, trigger: "blur" }],
-        pass: [{ validator: validatePass, trigger: "blur" }]
-      }
+        pass: [{ validator: validatePass, trigger: "blur" }],
+      },
     };
   },
   methods: {
     submitForm(formName) {
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate((valid) => {
         if (valid) {
           // alert("submit!");
           var username = this.ruleForm.username;
           var password = this.ruleForm.pass;
-          const url = `/apis/user/api/login?username=${username}&password=${password}`;
-          // const url = `/apis/session/setSession/username=${username}/password=${password}`;
+          const url = `https://vclass.api.cheeseburgerim.space/user/api/login?username=${username}&password=${password}`;
+          // const url = `https://vclass.api.cheeseburgerim.space//session/setSession/username=${username}/password=${password}`;
           fetch(url, {
-            method: "get"
+            method: "get",
+            credentials: "include",
+            // mode:"no-cors"
           })
-            .then(res => res.json()) //.json()  var=var   var=data.name  var=
-            .then(data => {
-              if (data.status === `同学` || data.status === `老师`) {
+            .then((res) => res.json()) //.json()  var=var   var=data.name  var=
+            .then((data) => {
+              if (data.status === `student` || data.status === `teacher`) {
                 var date = new Date();
                 var s = "日一二三四五六";
                 const h = this.$createElement;
@@ -112,7 +126,6 @@ export default {
                     { style: "color: #333" },
                     "您好！" +
                       username +
-                      data.status +
                       "，欢迎登陆VClass虚拟教研室资源共享云平台，现在是北京时间" +
                       date.getHours() +
                       ":" +
@@ -120,7 +133,7 @@ export default {
                       " 星期" +
                       s[date.getDay()] +
                       "。"
-                  )
+                  ),
                 });
                 sessionStorage.setItem("userName", username);
                 sessionStorage.setItem("userStatus", data.status);
@@ -134,14 +147,15 @@ export default {
                 clock += month + "-";
                 if (day < 10) clock += "0";
                 clock += day;
-                const actUrl = `/apis/user/api/setAct?username=${this.ruleForm.username}&date=${clock}`;
+                const actUrl = `https://vclass.api.cheeseburgerim.space/user/api/setAct?username=${this.ruleForm.username}&date=${clock}`;
                 fetch(actUrl, {
-                  method: "GET"
+                  method: "get",
+                  credentials: "include",
                 })
-                  .then(res => res.text())
-                  .then(data => {
+                  .then((res) => res.text())
+                  .then((data) => {
                     if (data === `success`) {
-                      this.$router.push("/Dashboard/Index");
+                      this.$router.push("/Dashboard/Recommend");
                     } else {
                       alert(data);
                     }
@@ -150,14 +164,14 @@ export default {
                 // console.log(data.status);
                 this.$notify.error({
                   title: "错误",
-                  message: "登陆失败，请检查账号是否存在或者密码是否正确❌！"
+                  message: "登陆失败，请检查账号是否存在或者密码是否正确❌！",
                 });
               }
             })
-            .catch(error => {
+            .catch((error) => {
               this.$notify.error({
                 title: "错误",
-                message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！"
+                message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！",
               });
             });
         } else {
@@ -189,11 +203,11 @@ export default {
             " 星期" +
             s[date.getDay()] +
             "。您现在正在使用游客身份！"
-        )
+        ),
       });
       this.$router.push("/Dashboard/Recommend");
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>

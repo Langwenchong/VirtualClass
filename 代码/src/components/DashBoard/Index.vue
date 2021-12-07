@@ -2,15 +2,18 @@
   <div id="Index">
     <div class="main animate__animated animate__fadeIn">
       <p class="wall">
-        <img src="../../../static/images/icon1.png" height="30px" />全部课程&nbsp;
+        <img
+          src="../../../static/images/icon1.png"
+          height="30px"
+        />全部课程&nbsp;
         <i class="fad fa-angle-double-right"></i>
       </p>
       <div class="info-gallery">
         <div class="wrapper">
           <div
             class="card"
-            v-for="(card,i) in courses"
-            :key="card.title+card.teacher"
+            v-for="(card, i) in courses"
+            :key="card.title + card.teacher"
             @click="goto(i)"
           >
             <div class="headimg">
@@ -18,12 +21,12 @@
             </div>
             <div class="content">
               <div class="top-c">
-                <p class="title">{{card.cname}}</p>
-                <p class="teacher">{{card.teacher}}</p>
+                <p class="title">{{ card.cname }}</p>
+                <p class="teacher">{{ card.teacher }}</p>
               </div>
               <div class="bottom-c">
-                <p class="snum">{{card.duration}}课时</p>
-                <p class="info">{{card.cdesc}}</p>
+                <p class="snum">{{ card.duration }}课时</p>
+                <p class="info">{{ card.cdesc }}</p>
               </div>
             </div>
           </div>
@@ -37,24 +40,25 @@
 <script>
 export default {
   created() {
-    const url = `/apis/course/api/getAllCourse`;
+    const url = `https://vclass.api.cheeseburgerim.space/course/api/getAllCourse`;
     fetch(url, {
-      method: "GET"
+      method: "get",
+      credentials: "include",
     })
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         this.courses = data;
       })
-      .catch(error => {
+      .catch((error) => {
         this.$notify.error({
           title: "错误",
-          message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！"
+          message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！",
         });
       });
   },
   data() {
     return {
-      courses: []
+      courses: [],
     };
   },
   methods: {
@@ -72,12 +76,12 @@ export default {
       sessionStorage.setItem("teacherUsername", this.courses[i].username);
       sessionStorage.setItem("cname", this.courses[i].cname);
       this.$router.push({
-        name: "log"
+        name: "log",
       });
       // console.log("goto!");
-    }
+    },
   },
-  name: "Index"
+  name: "Index",
 };
 </script>
 

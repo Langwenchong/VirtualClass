@@ -25,14 +25,14 @@
       </div>-->
       <div id="pin">
         <div class="console">
-          <h4>{{status===`老师`?`我创建的课程`:`我订阅的课程`}}</h4>
-          <el-button type="success" v-if="status===`老师`" @click="createCourse">创建课程</el-button>
+          <h4>{{status===`teacher`?`我创建的课程`:`我订阅的课程`}}</h4>
+          <el-button type="success" v-if="status===`teacher`" @click="createCourse">创建课程</el-button>
         </div>
         <div id="pin-container">
           <div class="start" v-if="arr.length>0?false:true">
             <p class="notice">
               <i class="fad fa-exclamation-square"></i>
-              &nbsp;您还没有{{status===`老师`?`创建`:`订阅`}}任何一个课程哦!
+              &nbsp;您还没有{{status===`teacher`?`创建`:`订阅`}}任何一个课程哦!
             </p>
           </div>
           <div
@@ -46,7 +46,7 @@
                 <i class="bx bxs-book-bookmark"></i>
                 <b>{{box.cname}}</b>
               </span>
-              <div class="icon" v-if="status===`老师`?true:false">
+              <div class="icon" v-if="status===`teacher`?true:false">
                 <el-tooltip class="item" effect="light" content="编辑课程章节信息" placement="top">
                   <i class="fad fa-edit" @click="updateCourse(idx)"></i>
                 </el-tooltip>
@@ -272,9 +272,10 @@ export default {
     }
     var username = sessionStorage.getItem("userName");
     var actMap = [];
-    const url = `/apis/user/api/getAct?username=${username}`;
+    const url = `https://vclass.api.cheeseburgerim.space/user/api/getAct?username=${username}`;
     fetch(url, {
-      method: "GET"
+      method: "get",
+                  credentials: "include",
     })
       .then(res => res.json())
       .then(data => {
@@ -297,10 +298,11 @@ export default {
       });
     // console.log(this.dateMap);
     var username = sessionStorage.getItem("userName");
-    if (sessionStorage.getItem("userStatus") === `老师`) {
-      const url1 = `/apis/course/api/getAllCourseByTeacherusername?username=${username}`;
+    if (sessionStorage.getItem("userStatus") === `teacher`) {
+      const url1 = `https://vclass.api.cheeseburgerim.space/course/api/getAllCourseByTeacherusername?username=${username}`;
       fetch(url1, {
-        method: "GET"
+        method: "get",
+                  credentials: "include",
       })
         .then(res => res.json())
         .then(data => {
@@ -314,9 +316,10 @@ export default {
           });
         });
     } else {
-      const url2 = `/apis/course/api/getAllCourseByStudentusername?username=${username}`;
+      const url2 = `https://vclass.api.cheeseburgerim.space/course/api/getAllCourseByStudentusername?username=${username}`;
       fetch(url2, {
-        method: "GET"
+        method: "get",
+                  credentials: "include",
       })
         .then(res => res.json())
         .then(data => {
@@ -333,16 +336,16 @@ export default {
   },
   mounted() {
     this.status = sessionStorage.getItem("userStatus");
-    setTimeout(function() {
-      var temp1 = document.getElementById("first");
-      temp1.style.width = "63%";
-      var temp2 = document.getElementById("second");
-      temp2.style.width = "42%";
-      var temp3 = document.getElementById("third");
-      temp3.style.width = "51%";
-      var temp4 = document.getElementById("fourth");
-      temp4.style.width = "53%";
-    }, 100);
+    // setTimeout(function() {
+    //   var temp1 = document.getElementById("first");
+    //   temp1.style.width = "63%";
+    //   var temp2 = document.getElementById("second");
+    //   temp2.style.width = "42%";
+    //   var temp3 = document.getElementById("third");
+    //   temp3.style.width = "51%";
+    //   var temp4 = document.getElementById("fourth");
+    //   temp4.style.width = "53%";
+    // }, 100);
     setTimeout(function() {
       $("#account").css("overflow-x", "visible");
     }, 2000);

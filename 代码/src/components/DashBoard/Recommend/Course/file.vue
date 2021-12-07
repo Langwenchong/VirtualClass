@@ -18,7 +18,7 @@
     <a :href="read" target="_blank" @click="watchFileLog">
       <el-button type="warning" plain v-if="show">阅览该文件</el-button>
     </a>
-    <a :href="download" download target="blank">
+    <a :href="download" download target="_blank">
       <!-- 下载该文件 -->
       <el-button type="primary" plain v-if="show" @click="downloadFileLog">下载该文件</el-button>
     </a>
@@ -50,10 +50,11 @@ export default {
       fd.append("timestamp", timestamp);
       fd.append("teacherUsername", teacherUsername);
       fd.append("cname", cname);
-      const url = `/apis/log/api/addLog`;
+      const url = `https://vclass.api.cheeseburgerim.space/log/api/addLog`;
       fetch(url, {
-        method: "POST",
-        body: fd
+       method: "POST",
+            body: fd,
+            credentials: "include",
       })
         .then(res => res.text())
         .then(data => {
@@ -69,9 +70,10 @@ export default {
             clock += month + "-";
             if (day < 10) clock += "0";
             clock += day;
-            const actUrl = `/apis/user/api/setAct?username=${username}&date=${clock}`;
+            const actUrl = `https://vclass.api.cheeseburgerim.space/user/api/setAct?username=${username}&date=${clock}`;
             fetch(actUrl, {
-              method: "GET"
+              method: "get",
+                  credentials: "include",
             })
               .then(res => res.text())
               .then(data => {});
@@ -106,10 +108,11 @@ export default {
       fd.append("timestamp", timestamp);
       fd.append("teacherUsername", teacherUsername);
       fd.append("cname", cname);
-      const url = `/apis/log/api/addLog`;
+      const url = `https://vclass.api.cheeseburgerim.space/log/api/addLog`;
       fetch(url, {
-        method: "POST",
-        body: fd
+       method: "POST",
+            body: fd,
+            credentials: "include",
       })
         .then(res => res.text())
         .then(data => {
@@ -124,9 +127,10 @@ export default {
           clock += month + "-";
           if (day < 10) clock += "0";
           clock += day;
-          const actUrl = `/apis/user/api/setAct?username=${username}&date=${clock}`;
+          const actUrl = `https://vclass.api.cheeseburgerim.space/user/api/setAct?username=${username}&date=${clock}`;
           fetch(actUrl, {
-            method: "GET"
+            method: "get",
+                  credentials: "include",
           })
             .then(res => res.text())
             .then(data => {});
@@ -170,16 +174,17 @@ export default {
       var uploader = this.file.uploader;
       var ftype = this.file.type;
       var fname = this.file.name;
-      const url = `/apis/file/api/downloadFile?username=${username}&uploaderUsername=${uploader}&ftype=${ftype}&fname=${fname}`;
+      const url = `https://vclass.api.cheeseburgerim.space/file/api/downloadFile?username=${username}&uploaderUsername=${uploader}&ftype=${ftype}&fname=${fname}`;
       fetch(url, {
-        method: `GET`
+        method: `GET`,
+        credentials: "include",
       })
         .then(res => res.text())
         .then(data => {
-          // console.log(data);
+          console.log(data);
           if (data != `fail`) {
             // console.log(data);
-            this.download = `/apis` + data;
+            this.download = `http://vclass.image.cheeseburgerim.space` + data;
           } 
           // else {
           //   this.$notify.error({
@@ -210,7 +215,7 @@ export default {
       var uploader = this.file.uploader;
       var ftype = this.file.type;
       var fname = this.file.name;
-      return `/apis/file/api/OnlineBrowsing/?uploaderUsername=${uploader}&ftype=${ftype}&fname=${fname}`;
+      return `https://vclass.api.cheeseburgerim.space/file/api/OnlineBrowsing/?uploaderUsername=${uploader}&ftype=${ftype}&fname=${fname}`;
     },
     link() {
       if (this.file.type === `word`) {

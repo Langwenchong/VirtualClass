@@ -3,8 +3,13 @@
     <div id="top" @click="toTop">
       <img src="../../../static/images/icon9.png" width="22px" />
     </div>
-    <el-dialog title="提示" :visible.sync="centerDialogVisible" width="30%" center>
-      <span>{{dialogMessage}}</span>
+    <el-dialog
+      title="提示"
+      :visible.sync="centerDialogVisible"
+      width="30%"
+      center
+    >
+      <span>{{ dialogMessage }}</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="centerDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="logout">确 定</el-button>
@@ -31,7 +36,7 @@
           </div>
           <span class="tooltip">课程</span>
         </li>
-        <li v-if="status!=`visitor`">
+        <li v-if="status != `visitor`">
           <div @click="goto(2)">
             <i class="bx bx-user-circle"></i>
             <span class="links_name">我的账号</span>
@@ -79,11 +84,15 @@
           <div class="profile_details">
             <img :src="avatar" alt />
             <div class="name_job">
-              <div class="name">{{name}}</div>
-              <div class="job">{{status}}</div>
+              <div class="name">{{ name }}</div>
+              <div class="job">{{ status }}</div>
             </div>
           </div>
-          <i class="bx bx-log-out" id="log_out" @click="centerDialogVisible = true"></i>
+          <i
+            class="bx bx-log-out"
+            id="log_out"
+            @click="centerDialogVisible = true"
+          ></i>
         </div>
       </div>
     </div>
@@ -101,29 +110,34 @@ export default {
     var username = sessionStorage.getItem("userName");
     this.status = sessionStorage.getItem("userStatus");
     if (username == `visitor`) {
-      this.avatar = `/apis/VClass/static/defaultAvatar.jpg`;
+      this.avatar = `https://vclass.api.cheeseburgerim.space/VClass/static/defaultAvatar.jpg`;
     } else {
-      const avatarurl = `/apis/user/api/getAvatar?username=${username}`;
+      const avatarurl = `https://vclass.api.cheeseburgerim.space/user/api/getAvatar?username=${username}`;
       fetch(avatarurl, {
-        method: "get"
+        method: "get",
+        credentials: "include",
       })
-        .then(res => res.text())
-        .then(data => {
-          this.avatar = `/apis` + data;
+        .then((res) => res.text())
+        .then((data) => {
+          this.avatar = `http://vclass.image.cheeseburgerim.space` + data;
+           if(data===`//VClass//static//defaultAvatar.jpg`){
+            this.avatar = `http://vclass.api.cheeseburgerim.space` + data;
+          }
         })
-        .catch(error => {
+        .catch((error) => {
           this.$notify.error({
             title: "错误",
-            message: "后台出现图片存储异常，暂时使用默认头像😑"
+            message: "后台出现图片存储异常，暂时使用默认头像😑",
           });
         });
     }
-    const infourl = `/apis/user/api/getInfo?username=${username}`;
+    const infourl = `https://vclass.api.cheeseburgerim.space/user/api/getInfo?username=${username}`;
     fetch(infourl, {
-      method: "get"
+      method: "get",
+      credentials: "include",
     })
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         if (data.hasOwnProperty("result")) {
           this.status = sessionStorage.getItem("userStatus");
           this.name = sessionStorage.getItem("userName");
@@ -135,16 +149,16 @@ export default {
           }
         }
       })
-      .catch(error => {
+      .catch((error) => {
         this.$notify.error({
           title: "错误",
-          message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！"
+          message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！",
         });
       });
   },
   mounted() {
     //返回顶部
-    window.onscroll = function() {
+    window.onscroll = function () {
       if (
         document.body.scrollTop > 500 ||
         document.documentElement.scrollTop > 500
@@ -157,7 +171,7 @@ export default {
     let btn = document.querySelector("#btn");
     let sidebar = document.querySelector(".sidebar");
     let searchBtn = document.querySelector(".bx-search");
-    btn.onclick = function() {
+    btn.onclick = function () {
       sidebar.classList.toggle("active");
       if (btn.classList.contains("bx-menu")) {
         btn.classList.replace("bx-menu", "bx-menu-alt-right");
@@ -165,7 +179,7 @@ export default {
         btn.classList.replace("bx-menu-alt-right", "bx-menu");
       }
     };
-    searchBtn.onclick = function() {
+    searchBtn.onclick = function () {
       sidebar.classList.toggle("active");
     };
   },
@@ -176,7 +190,7 @@ export default {
       status: ``,
       dialogMessage: `如果要退出,当前未保存的操作将无法保留,您确定要登出账号吗❓`,
       isNight: false,
-      centerDialogVisible: false
+      centerDialogVisible: false,
     };
   },
   methods: {
@@ -188,23 +202,24 @@ export default {
         // alert("您已经不是登录状态了");
         this.dialogMessage = `如果要退出,当前未保存的操作将无法保留,您确定要登出账号吗❓`;
         var username = sessionStorage.getItem("userName");
-        const url = `/apis/user/api/logout?username=${username}`;
+        const url = `https://vclass.api.cheeseburgerim.space/user/api/logout?username=${username}`;
         fetch(url, {
-          method: "GET"
+          method: "get",
+          credentials: "include",
         })
-          .then(res => res.text())
-          .then(data => {
+          .then((res) => res.text())
+          .then((data) => {
             if (data === `fail`) {
               this.$notify.error({
                 title: "错误",
-                message: "登出失败！"
+                message: "登出失败！",
               });
             }
           })
-          .catch(error => {
+          .catch((error) => {
             this.$notify.error({
               title: "错误",
-              message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！"
+              message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！",
             });
           });
         this.$router.push({ name: "login" });
@@ -250,10 +265,7 @@ export default {
         document.documentElement.style.setProperty("--text7", "#8b949e");
         document.documentElement.style.setProperty("--opacity", "0.7");
       } else {
-        document.documentElement.style.setProperty(
-          "--background1",
-          "#eee"
-        );
+        document.documentElement.style.setProperty("--background1", "#eee");
         document.documentElement.style.setProperty("--background2", "#fff");
         document.documentElement.style.setProperty("--background3", "#f8f9fb");
         document.documentElement.style.setProperty(
@@ -267,9 +279,9 @@ export default {
         document.documentElement.style.setProperty("--text7", "#586069");
         document.documentElement.style.setProperty("--opacity", "1");
       }
-    }
+    },
   },
-  name: "Dashboard"
+  name: "Dashboard",
 };
 </script>
 

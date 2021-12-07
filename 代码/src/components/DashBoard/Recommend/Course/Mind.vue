@@ -1,7 +1,14 @@
 <template>
   <div id="Mind">
-    <el-dialog title="提示" :visible.sync="centerDialogVisible" width="30%" center>
-      <span>确定要退出吗？您还未保存修改，此时退出之前的操作将不会被保存！</span>
+    <el-dialog
+      title="提示"
+      :visible.sync="centerDialogVisible"
+      width="30%"
+      center
+    >
+      <span
+        >确定要退出吗？您还未保存修改，此时退出之前的操作将不会被保存！</span
+      >
       <span slot="footer" class="dialog-footer">
         <el-button @click="centerDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="logout">确 定</el-button>
@@ -50,16 +57,20 @@
             :value="item.value"
           >
             <span style="float: left">{{ item.label }}</span>
-            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+            <span style="float: right; color: #8492a6; font-size: 13px">{{
+              item.value
+            }}</span>
           </el-option>
         </el-select>
-        <el-button plain @click="centerDialogVisible=true">退出编辑</el-button>
+        <el-button plain @click="centerDialogVisible = true"
+          >退出编辑</el-button
+        >
         <el-button plain @click="submit">保存修改</el-button>
       </div>
     </div>
     <div id="show">
       <div id="jsmind_container"></div>
-      <div style="display:none">
+      <div style="display: none">
         <input class="file" type="file" id="image-chooser" accept="image/*" />
       </div>
     </div>
@@ -81,12 +92,13 @@ export default {
       // var nodes = [];
       var teacherUsername = sessionStorage.getItem("teacherUsername");
       var cname = sessionStorage.getItem("cname");
-      const url = `/apis/course/mindMap/api/getMindMap?teacherUsername=${teacherUsername}&cname=${cname}`;
+      const url = `https://vclass.api.cheeseburgerim.space/course/mindMap/api/getMindMap?teacherUsername=${teacherUsername}&cname=${cname}`;
       fetch(url, {
-        method: "GET"
+        method: "get",
+        credentials: "include",
       })
-        .then(res => res.json())
-        .then(data => {
+        .then((res) => res.json())
+        .then((data) => {
           if (!data.hasOwnProperty("result")) {
             for (let i = 0; i < data.length; i++) {
               let node = {};
@@ -102,7 +114,7 @@ export default {
               this.nodes.push({
                 id: "root",
                 isroot: true,
-                topic: sessionStorage.getItem("cname")
+                topic: sessionStorage.getItem("cname"),
               });
             }
             var mind = {
@@ -111,12 +123,12 @@ export default {
               meta: {
                 name: "example",
                 author: "Langwenchong",
-                version: "0.2"
+                version: "0.2",
               },
               /* 数据格式声明 */
               format: "node_array",
               /* 数据内容 */
-              data: this.nodes
+              data: this.nodes,
             };
 
             var options = {
@@ -129,9 +141,9 @@ export default {
                 mapping: {
                   // 快捷键映射
                   addchild: 45, // <Insert>
-                  delnode: 8 // <Delete>
-                }
-              }
+                  delnode: 8, // <Delete>
+                },
+              },
             };
             jm = new jsMind(options);
             jm.show(mind);
@@ -141,17 +153,17 @@ export default {
             imageChooser = document.getElementById("image-chooser");
             imageChooser.addEventListener(
               "change",
-              function(event) {
+              function (event) {
                 // Read file here.
                 var reader = new FileReader();
-                reader.onloadend = function() {
+                reader.onloadend = function () {
                   var selected_node = jm.get_selected_node();
                   var nodeid = jsMind.util.uuid.newid();
                   var topic = undefined;
                   var data = {
                     "background-image": reader.result,
                     width: "100",
-                    height: "100"
+                    height: "100",
                   };
                   var node = jm.add_node(selected_node, nodeid, topic, data);
                   //var node = _jm.add_image_node(selected_node, nodeid, reader.result, 100, 100);
@@ -170,28 +182,29 @@ export default {
           } else {
             this.$notify.error({
               title: "错误",
-              message: "思维导图加载失败！"
+              message: "思维导图加载失败！",
             });
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.$notify.error({
             title: "错误",
-            message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！"
+            message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！",
           });
         });
     },
     submit() {
       var teacherUsername = sessionStorage.getItem("teacherUsername");
       var cname = sessionStorage.getItem("cname");
-      const delUrl = `/apis/course/mindMap/api/deleteMindMap?teacherUsername=${teacherUsername}&cname=${cname}`;
+      const delUrl = `https://vclass.api.cheeseburgerim.space/course/mindMap/api/deleteMindMap?teacherUsername=${teacherUsername}&cname=${cname}`;
       fetch(delUrl, {
-        method: "GET"
+        method: "get",
+        credentials: "include",
       })
-        .then(res => res.text())
-        .then(data => {
+        .then((res) => res.text())
+        .then((data) => {
           if (data === `success`) {
-            const url = `/apis/course/mindMap/api/addMindMapNode`;
+            const url = `https://vclass.api.cheeseburgerim.space/course/mindMap/api/addMindMapNode`;
             var mind_data = jm.get_data("node_array");
             var ok = true;
             // console.log(mind_data);
@@ -236,20 +249,21 @@ export default {
 
               fetch(url, {
                 method: "POST",
-                body: fd
+                body: fd,
+                credentials: "include",
               })
-                .then(res => res.text())
-                .then(data => {
+                .then((res) => res.text())
+                .then((data) => {
                   if (data === `success`) {
                     ok = true;
                   } else {
                     ok = false;
                   }
                 })
-                .catch(error => {
+                .catch((error) => {
                   this.$notify.error({
                     title: "错误",
-                    message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！"
+                    message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！",
                   });
                 });
             }
@@ -258,13 +272,13 @@ export default {
               this.$notify({
                 title: "保存成功",
                 message: "思维导图发布成功啦✅",
-                type: "success"
+                type: "success",
               });
             }
           } else {
             this.$notify.error({
               title: "错误",
-              message: "❌思维导图更新出错！"
+              message: "❌思维导图更新出错！",
             });
           }
         });
@@ -283,13 +297,14 @@ export default {
       fd.append("timestamp", timestamp);
       fd.append("teacherUsername", teacherUsername);
       fd.append("cname", cname);
-      const url = `/apis/log/api/addLog`;
+      const url = `https://vclass.api.cheeseburgerim.space/log/api/addLog`;
       fetch(url, {
         method: "POST",
-        body: fd
+        body: fd,
+        credentials: "include",
       })
-        .then(res => res.text())
-        .then(data => {
+        .then((res) => res.text())
+        .then((data) => {
           console.log("save log success");
           var username = sessionStorage.getItem("userName");
           var now = new Date();
@@ -301,21 +316,22 @@ export default {
           clock += month + "-";
           if (day < 10) clock += "0";
           clock += day;
-          const actUrl = `/apis/user/api/setAct?username=${username}&date=${clock}`;
+          const actUrl = `https://vclass.api.cheeseburgerim.space/user/api/setAct?username=${username}&date=${clock}`;
           fetch(actUrl, {
-            method: "GET"
+            method: "get",
+            credentials: "include",
           })
-            .then(res => res.text())
-            .then(data => {
+            .then((res) => res.text())
+            .then((data) => {
               if (data === `success`) {
                 this.$router.push({ name: `self` });
               }
             });
         })
-        .catch(error => {
+        .catch((error) => {
           this.$notify.error({
             title: "错误",
-            message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！"
+            message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！",
           });
         });
     },
@@ -350,7 +366,7 @@ export default {
       if (!selected_node) {
         this.$notify.error({
           title: "错误",
-          message: "❌请先选择一个操作节点！"
+          message: "❌请先选择一个操作节点！",
         });
         return;
       }
@@ -362,7 +378,7 @@ export default {
       if (!selected_node) {
         this.$notify.error({
           title: "错误",
-          message: "❌请先选择一个操作节点！"
+          message: "❌请先选择一个操作节点！",
         });
         return;
       }
@@ -375,7 +391,7 @@ export default {
       if (!selected_node) {
         this.$notify.error({
           title: "错误",
-          message: "❌请先选择一个操作节点！"
+          message: "❌请先选择一个操作节点！",
         });
         return;
       }
@@ -401,7 +417,7 @@ export default {
       } else {
         zoomOutButton.disabled = true;
       }
-    }
+    },
   },
   data() {
     return {
@@ -410,41 +426,41 @@ export default {
       themes: [
         {
           value: "belizehole",
-          label: "共享蓝"
+          label: "共享蓝",
         },
         {
           value: "pumpkin",
-          label: "醒目橙"
+          label: "醒目橙",
         },
         {
           value: "pomegranate",
-          label: "佩奇红"
+          label: "佩奇红",
         },
         {
           value: "nephrite",
-          label: "辣眼绿"
+          label: "辣眼绿",
         },
         {
           value: "wisteria",
-          label: "基佬紫"
+          label: "基佬紫",
         },
         {
           value: "asphalt",
-          label: "尊贵黑"
+          label: "尊贵黑",
         },
         {
           value: "clouds",
-          label: "简云白"
-        }
+          label: "简云白",
+        },
       ],
-      value: "belizehole"
+      value: "belizehole",
     };
   },
   watch: {
     value(n, o) {
       jm.set_theme(n);
-    }
-  }
+    },
+  },
 };
 </script>
 

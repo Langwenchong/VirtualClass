@@ -16,6 +16,8 @@
   <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
   <!--jsmind-->
   <link rel="stylesheet" href="./static//style//jsmind.css">
+  <!-- wow.js -->
+  <script src="https://cdn.bootcdn.net/ajax/libs/wow/1.1.2/wow.js"></script>
   <script src="./static/js/jsmind.js"></script>
   <script src="./static//js/jsmind.screenshot.js"></script>
   <script src="./static//js/jsmind.shell.js"></script>
@@ -64,6 +66,9 @@
     .create,
     .backup,
     .item,
+    .submit,
+    #subscribe,
+    h3,
     li {
       cursor: url("//cdn.jsdelivr.net/gh/pdone/static/img/cursor/link.cur"), pointer !important;
     }
@@ -97,6 +102,14 @@
 <body>
   <div id="app"></div>
   <!-- built files will be auto injected -->
+  <script>var wow = new WOW({
+      boxClass: 'wow',
+      animateClass: 'animated',
+      offset: 0,
+      mobile: true,
+      live: true
+    });
+    wow.init();</script>
 </body>
 
 </html>

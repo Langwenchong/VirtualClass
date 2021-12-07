@@ -22,6 +22,7 @@ import Calendar from '@/components/DashBoard/Recommend/Course/Calendar.vue'
 import Mind from '@/components/DashBoard/Recommend/Course/Mind.vue'
 // import Comment from '@/components/DashBoard/Comment/index.vue'
 import TopicList from '@/components/DashBoard/Recommend/Discussion/TopicList.vue'
+import TopicEditor from '@/components/DashBoard/Recommend/Discussion/TopicEditor.vue'
 
 Vue.use(Router)
 
@@ -145,6 +146,11 @@ export default new Router({
           path: 'TopicList',
           name: 'TopicList',
           component: TopicList
+        },
+        {
+          path: 'TopicEditor',
+          name: 'TopicEditor',
+          component: TopicEditor
         }
       ]
     }

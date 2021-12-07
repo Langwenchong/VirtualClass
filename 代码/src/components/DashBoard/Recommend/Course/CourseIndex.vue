@@ -120,7 +120,7 @@
           </span>
         </div>
         <div class="r-wrapper">
-          <div class="myzone" v-if="status===`同学`?true:false" @click="subscribe">
+          <div class="myzone" v-if="status===`student`?true:false" @click="subscribe">
             <div class="button">订阅课堂</div>
           </div>
           <div class="myzone">
@@ -202,9 +202,10 @@ export default {
     this.teacherUsername = sessionStorage.getItem("teacherUsername");
     this.cname = sessionStorage.getItem("cname");
     // alert(this.teacherUsername + " " + this.cname);
-    const url = `/apis/course/api/getCourseInfo?username=${this.teacherUsername}&cname=${this.cname}`;
+    const url = `https://vclass.api.cheeseburgerim.space/course/api/getCourseInfo?username=${this.teacherUsername}&cname=${this.cname}`;
     fetch(url, {
-      method: "GET"
+      method: "get",
+                  credentials: "include",
     })
       .then(res => res.json())
       .then(data => {
@@ -227,18 +228,20 @@ export default {
           message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！"
         });
       });
-    const subscriberUrl = `/apis/course/api/getAllSubscriber?username=${this.teacherUsername}&cname=${this.cname}`;
+    const subscriberUrl = `https://vclass.api.cheeseburgerim.space/course/api/getAllSubscriber?username=${this.teacherUsername}&cname=${this.cname}`;
     fetch(subscriberUrl, {
-      method: "GET"
+      method: "get",
+                  credentials: "include",
     })
       .then(res => res.json())
       .then(data => {
         this.tot = data.length;
         for (var i = 0; i < data.length && i < 5; i++) {
           var avatar = ``;
-          var avatarurl = `/apis/user/api/getAvatar?username=${data[i].id.username}`;
+          var avatarurl = `https://vclass.api.cheeseburgerim.space/user/api/getAvatar?username=${data[i].id.username}`;
           fetch(avatarurl, {
-            method: "GET"
+            method: "get",
+                  credentials: "include",
           })
             .then(res => res.text())
             .then(data => {
@@ -348,9 +351,10 @@ export default {
     loadMind() {
       var teacherUsername = sessionStorage.getItem("teacherUsername");
       var cname = sessionStorage.getItem("cname");
-      const url = `/apis/course/mindMap/api/getMindMap?teacherUsername=${teacherUsername}&cname=${cname}`;
+      const url = `https://vclass.api.cheeseburgerim.space/course/mindMap/api/getMindMap?teacherUsername=${teacherUsername}&cname=${cname}`;
       fetch(url, {
-        method: "GET"
+        method: "get",
+                  credentials: "include",
       })
         .then(res => res.json())
         .then(data => {
@@ -453,9 +457,10 @@ export default {
     load() {
       var username = sessionStorage.getItem("teacherUsername");
       var cname = sessionStorage.getItem("cname");
-      const url = `/apis/course/schedule/api/getSchedule?username=${username}&cname=${cname}`;
+      const url = `https://vclass.api.cheeseburgerim.space/course/schedule/api/getSchedule?username=${username}&cname=${cname}`;
       fetch(url, {
-        method: "GET"
+        method: "get",
+                  credentials: "include",
       })
         .then(res => res.json())
         .then(data => {
@@ -508,9 +513,10 @@ export default {
     subscribe() {
       var username = sessionStorage.getItem("userName");
       // console.log(username + this.teacherUsername + this.cname);
-      const url = `/apis/course/api/subscribe?studentUsername=${username}&teacherUsername=${this.teacherUsername}&cname=${this.cname}`;
+      const url = `https://vclass.api.cheeseburgerim.space/course/api/subscribe?studentUsername=${username}&teacherUsername=${this.teacherUsername}&cname=${this.cname}`;
       fetch(url, {
-        method: "GET"
+        method: "get",
+                  credentials: "include",
       })
         .then(res => res.text())
         .then(data => {

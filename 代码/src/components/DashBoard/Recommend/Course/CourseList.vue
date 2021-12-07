@@ -20,9 +20,15 @@
             将文件拖到此处，或
             <em>点击上传</em>
           </div>
-          <div class="el-upload__tip" slot="tip">只能上传一个文件且不能超过30M！</div>
+          <div class="el-upload__tip" slot="tip">
+            只能上传一个文件且不能超过30M！
+          </div>
         </el-upload>
-        <el-input placeholder="请输入文件名称(不需要加文件后缀)" v-model="filename" clearable></el-input>
+        <el-input
+          placeholder="请输入文件名称(不需要加文件后缀)"
+          v-model="filename"
+          clearable
+        ></el-input>
         <el-transfer
           v-model="filetags"
           :data="list"
@@ -37,15 +43,17 @@
       <div
         @click="operate(l)"
         class="tag"
-        v-for="(tag,l) in chapters[idx].tags"
+        v-for="(tag, l) in chapters[idx].tags"
         :key="tag"
-        v-color="{tag:tag,tags:tags}"
+        v-color="{ tag: tag, tags: tags }"
       >
         <i class="fal fa-tags"></i>
-        {{tag}}
+        {{ tag }}
       </div>
     </div>
-    <remote-css href="https://fonts.font.im/css?family=Dancing+Script"></remote-css>
+    <remote-css
+      href="https://fonts.font.im/css?family=Dancing+Script"
+    ></remote-css>
     <div id="t-nav" class="animate__animated animate__fadeInDown">
       <div class="backup" @click="backup">
         <i class="fad fa-reply"></i>
@@ -65,23 +73,26 @@
           :disabled="item.disabled"
         ></el-option>
       </el-select>
-      <el-input placeholder="请输入文件名称" prefix-icon="el-icon-search" v-model="searchTxt" clearable></el-input>
+      <el-input
+        placeholder="请输入文件名称"
+        prefix-icon="el-icon-search"
+        v-model="searchTxt"
+        clearable
+      ></el-input>
     </div>
     <div id="l-nav" class="animate__animated animate__fadeInLeft">
-      <div class="title">
-        <i class="fad fa-books"></i>资源列表
-      </div>
+      <div class="title"><i class="fad fa-books"></i>资源列表</div>
       <div
         class="box"
-        v-for="(chapter,i) in chapters"
+        v-for="(chapter, i) in chapters"
         :key="chapter.title"
         :title="chapter.title"
         @click="activeChapters(i)"
       >
-        <p class="index">- Chapter {{i+1}} -</p>
+        <p class="index">- Chapter {{ i + 1 }} -</p>
         <p class="subtitle">
           <i class="fad fa-folder-open"></i>
-          {{chapter.title}}
+          {{ chapter.title }}
         </p>
       </div>
     </div>
@@ -89,25 +100,25 @@
       <transition-group>
         <div
           class="item"
-          v-for="(item,j) in files"
-          :key="item.name+item.type"
+          v-for="(item, j) in files"
+          :key="item.name + item.type"
           @click="activeFiles(j)"
         >
-          <p class="name">{{item.name}}</p>
+          <p class="name">{{ item.name }}</p>
           <p class="type">
             <span class="circle" v-type="item.type"></span>
-            {{item.type}}
+            {{ item.type }}
           </p>
-          <p class="uploader">上传者:{{item.uploader}}</p>
+          <p class="uploader">上传者:{{ item.uploader }}</p>
           <div class="tags">
             <div
               class="tag"
-              v-color="{tag:filetag,tags:tags}"
+              v-color="{ tag: filetag, tags: tags }"
               v-for="filetag in chapters[idx].files[j].tags"
               :key="filetag"
             >
               <i class="fal fa-tags"></i>
-              {{filetag}}
+              {{ filetag }}
             </div>
           </div>
           <el-popconfirm
@@ -118,13 +129,21 @@
             title="您确定要删除此文件吗？"
             @confirm="del(j)"
           >
-            <el-button slot="reference" class="confirm" v-if="status===`老师`?true:false">删除</el-button>
+            <el-button
+              slot="reference"
+              class="confirm"
+              v-if="status === `teacher` ? true : false"
+              >删除</el-button
+            >
           </el-popconfirm>
         </div>
       </transition-group>
     </div>
     <div id="r-info" class="animate__animated animate__fadeInRight">
-      <file :file="files[key]" v-if="chapters.length>0&&files.length>0"></file>
+      <file
+        :file="files[key]"
+        v-if="chapters.length > 0 && files.length > 0"
+      ></file>
     </div>
   </div>
 </template>
@@ -140,12 +159,13 @@ export default {
     var teacherUsername = this.teacherUsername;
     var cname = this.cname;
     // alert(this.teacherUsername + this.cname);
-    const url = `/apis/course/chapter/api/getAllChapter?username=${teacherUsername}&cname=${cname}`;
+    const url = `https://vclass.api.cheeseburgerim.space/course/chapter/api/getAllChapter?username=${teacherUsername}&cname=${cname}`;
     fetch(url, {
-      method: "GET"
+      method: "get",
+      credentials: "include",
     })
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         if (data.length > 0) {
           for (let i = 0; i < data.length; i++) {
             // var chnum=data[i].chnum;
@@ -160,12 +180,13 @@ export default {
             this.chapters.push(chapter);
             // console.log(this.chapters.length);
           }
-          const fileUrl = `/apis/file/api/getAllFile?teacherUsername=${teacherUsername}&cname=${cname}`;
+          const fileUrl = `https://vclass.api.cheeseburgerim.space/file/api/getAllFile?teacherUsername=${teacherUsername}&cname=${cname}`;
           fetch(fileUrl, {
-            method: "GET"
+            method: "get",
+            credentials: "include",
           })
-            .then(res => res.json())
-            .then(data => {
+            .then((res) => res.json())
+            .then((data) => {
               if (data instanceof Array) {
                 for (let i = 0; i < data.length; i++) {
                   var file = {};
@@ -190,21 +211,21 @@ export default {
                 console.log(data.length);
                 this.$notify.error({
                   title: "错误",
-                  message: "❌文件列表加载失败！"
+                  message: "❌文件列表加载失败！",
                 });
               }
             });
         } else {
           this.$notify.error({
             title: "错误",
-            message: "❌章节列表加载失败！"
+            message: "❌章节列表加载失败！",
           });
         }
       })
-      .catch(error => {
+      .catch((error) => {
         this.$notify.error({
           title: "错误",
-          message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！"
+          message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！",
         });
       });
   },
@@ -219,13 +240,13 @@ export default {
     "remote-css": {
       render(createElement) {
         return createElement("link", {
-          attrs: { rel: "stylesheet", href: this.href }
+          attrs: { rel: "stylesheet", href: this.href },
         });
       },
       props: {
-        href: { type: String, required: true }
-      }
-    }
+        href: { type: String, required: true },
+      },
+    },
   },
   name: "courseList",
   data() {
@@ -241,36 +262,36 @@ export default {
       options: [
         {
           value: "all",
-          label: "全部文件"
+          label: "全部文件",
         },
         {
           value: "word",
-          label: "仅word"
+          label: "仅word",
         },
         {
           value: "ppt",
-          label: "仅ppt"
+          label: "仅ppt",
         },
         {
           value: "excel",
-          label: "仅EXCEL"
+          label: "仅EXCEL",
         },
         {
           value: "pdf",
-          label: "仅pdf"
+          label: "仅pdf",
         },
         {
           value: "md",
-          label: "仅md"
+          label: "仅md",
         },
         {
           value: "txt",
-          label: "仅text"
+          label: "仅text",
         },
         {
           value: "img",
-          label: "仅png/jpg"
-        }
+          label: "仅png/jpg",
+        },
       ],
       value: "all",
       centerDialogVisible: false,
@@ -278,14 +299,14 @@ export default {
       filtersArr: [],
       idx: 0,
       chapters: [],
-      status: ``
+      status: ``,
     };
   },
   methods: {
     warn() {
       this.$notify.error({
         title: "错误",
-        message: "一次只允许上传一个文件📁！"
+        message: "一次只允许上传一个文件📁！",
       });
     },
     beforeUpload(file) {
@@ -294,7 +315,7 @@ export default {
         if (file.size / 1024 / 1024 > 30) {
           this.$notify.error({
             title: "错误",
-            message: "文件最大不能超过30M📁！"
+            message: "文件最大不能超过30M📁！",
           });
         }
         fd.append("username", sessionStorage.getItem("userName"));
@@ -310,43 +331,44 @@ export default {
         fd.append("file", file);
         fd.append("chnum", this.idx + 1);
         if (
-          sessionStorage.getItem("userStatus") != `同学` &&
-          sessionStorage.getItem("userStatus") != `老师`
+          sessionStorage.getItem("userStatus") != `student` &&
+          sessionStorage.getItem("userStatus") != `teacher`
         ) {
           this.$notify.error({
             title: "错误",
             message:
-              "❌您的上传权限不足，请以同学或者教师身份登录后重新上传！3s后将跳转到登录页面。"
+              "❌您的上传权限不足，请以同学或者教师身份登录后重新上传！3s后将跳转到登录页面。",
           });
           setTimeout(() => {
             this.$router.push({ name: "login" });
           }, 3000);
         } else {
-          const url = `/apis/file/api/uploadFile`;
+          const url = `https://vclass.api.cheeseburgerim.space/file/api/uploadFile`;
           fetch(url, {
             method: "POST",
-            body: fd
+            body: fd,
+            credentials: "include",
           })
-            .then(res => res.text())
-            .then(data => {
+            .then((res) => res.text())
+            .then((data) => {
               if (data === `success`) {
                 this.$notify({
                   title: "上传成功",
                   message: "文件成功上传啦✅",
-                  type: "success"
+                  type: "success",
                 });
                 this.uploadFileLog();
               } else if (data === `fail`) {
                 this.$notify.error({
                   title: "错误",
-                  message: "❌文件上传失败，请重新尝试！"
+                  message: "❌文件上传失败，请重新尝试！",
                 });
               }
             })
-            .catch(error => {
+            .catch((error) => {
               this.$notify.error({
                 title: "错误",
-                message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！"
+                message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！",
               });
               // alert(`error`)
             });
@@ -354,7 +376,7 @@ export default {
       } else {
         this.$notify.error({
           title: "错误",
-          message: "❌请完整填写上传信息！"
+          message: "❌请完整填写上传信息！",
         });
       }
     },
@@ -372,13 +394,14 @@ export default {
       fd.append("timestamp", timestamp);
       fd.append("teacherUsername", teacherUsername);
       fd.append("cname", cname);
-      const url = `/apis/log/api/addLog`;
+      const url = `https://vclass.api.cheeseburgerim.space/log/api/addLog`;
       fetch(url, {
         method: "POST",
-        body: fd
+        body: fd,
+        credentials: "include",
       })
-        .then(res => res.text())
-        .then(data => {
+        .then((res) => res.text())
+        .then((data) => {
           var username = sessionStorage.getItem("userName");
           var now = new Date();
           var year = now.getFullYear(); //年
@@ -389,21 +412,22 @@ export default {
           clock += month + "-";
           if (day < 10) clock += "0";
           clock += day;
-          const actUrl = `/apis/user/api/setAct?username=${username}&date=${clock}`;
+          const actUrl = `https://vclass.api.cheeseburgerim.space/user/api/setAct?username=${username}&date=${clock}`;
           fetch(actUrl, {
-            method: "GET"
+            method: "get",
+            credentials: "include",
           })
-            .then(res => res.text())
-            .then(data => {
+            .then((res) => res.text())
+            .then((data) => {
               if (data === `success`) {
                 this.$router.go(0);
               }
             });
         })
-        .catch(error => {
+        .catch((error) => {
           this.$notify.error({
             title: "错误",
-            message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！"
+            message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！",
           });
         });
     },
@@ -443,7 +467,7 @@ export default {
         for (let i = 0; i < tagslist.length; i++) {
           this.list.push({
             key: i,
-            label: `${tagslist[i]}`
+            label: `${tagslist[i]}`,
           });
         }
       }
@@ -513,32 +537,33 @@ export default {
       fd.append("ftype", this.chapters[this.idx].files[j].type);
       fd.append("fname", this.chapters[this.idx].files[j].name);
       // alert(this.chapters[this.idx].files[j].uploader);
-      const url = `/apis/file/api/deleteFile`;
+      const url = `https://vclass.api.cheeseburgerim.space/file/api/deleteFile`;
       fetch(url, {
         method: "POST",
-        body: fd
+        body: fd,
+        credentials: "include",
       })
-        .then(res => res.text())
-        .then(data => {
+        .then((res) => res.text())
+        .then((data) => {
           if (data === `success`) {
             this.$notify({
               title: "删除成功",
               message: "文件成功删除啦✅",
-              type: "success"
+              type: "success",
             });
             // this.chapters[this.idx].files.splice(j, 1);
             this.deleteFileLog(j);
           } else {
             this.$notify.error({
               title: "错误",
-              message: "❌文件删除失败！"
+              message: "❌文件删除失败！",
             });
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.$notify.error({
             title: "错误",
-            message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！"
+            message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！",
           });
         });
     },
@@ -556,13 +581,14 @@ export default {
       fd.append("timestamp", timestamp);
       fd.append("teacherUsername", teacherUsername);
       fd.append("cname", cname);
-      const url = `/apis/log/api/addLog`;
+      const url = `https://vclass.api.cheeseburgerim.space/log/api/addLog`;
       fetch(url, {
         method: "POST",
-        body: fd
+        body: fd,
+        credentials: "include",
       })
-        .then(res => res.text())
-        .then(data => {
+        .then((res) => res.text())
+        .then((data) => {
           // console.log("save log success");
           var username = sessionStorage.getItem("userName");
           var now = new Date();
@@ -574,12 +600,13 @@ export default {
           clock += month + "-";
           if (day < 10) clock += "0";
           clock += day;
-          const actUrl = `/apis/user/api/setAct?username=${username}&date=${clock}`;
+          const actUrl = `https://vclass.api.cheeseburgerim.space/user/api/setAct?username=${username}&date=${clock}`;
           fetch(actUrl, {
-            method: "GET"
+            method: "get",
+            credentials: "include",
           })
-            .then(res => res.text())
-            .then(data => {
+            .then((res) => res.text())
+            .then((data) => {
               if (data === `success`) {
                 this.$router.go(0);
               } else {
@@ -587,10 +614,10 @@ export default {
               }
             });
         })
-        .catch(error => {
+        .catch((error) => {
           this.$notify.error({
             title: "错误",
-            message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！"
+            message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！",
           });
         });
     },
@@ -622,7 +649,7 @@ export default {
         }
       }
       return ok;
-    }
+    },
   },
   directives: {
     type(el, binding) {
@@ -757,7 +784,7 @@ export default {
         el.style.color = `var(--text1)`;
         el.style.opacity = `0.4`;
       }
-    }
+    },
   },
   computed: {
     files() {
@@ -793,8 +820,8 @@ export default {
       // console.log(files);
       // console.log(files);
       return files;
-    }
-  }
+    },
+  },
   // watch: {
   //   idx: function(newVal, oldVal) {
   //     this.activeChapters();

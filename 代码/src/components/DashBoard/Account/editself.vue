@@ -4,6 +4,7 @@
       <div id="imgBx">
         <el-upload
           class="avatar-uploader"
+          with-credentials="true"
           :action="url"
           name="avatar"
           :show-file-list="false"
@@ -27,22 +28,49 @@
           class="demo-ruleForm"
         >
           <el-form-item label="昵称" prop="name">
-            <el-input type="text" v-model="ruleForm.name" autocomplete="off" placeholder="请输入用户昵称"></el-input>
+            <el-input
+              type="text"
+              v-model="ruleForm.name"
+              autocomplete="off"
+              placeholder="请输入用户昵称"
+            ></el-input>
           </el-form-item>
           <el-form-item label="座右铭" prop="motto">
-            <el-input type="text" v-model="ruleForm.motto" autocomplete="off" placeholder="请输入座右铭"></el-input>
+            <el-input
+              type="text"
+              v-model="ruleForm.motto"
+              autocomplete="off"
+              placeholder="请输入座右铭"
+            ></el-input>
           </el-form-item>
           <el-form-item label="学校" prop="school">
-            <el-input type="text" v-model="ruleForm.school" autocomplete="off" placeholder="请输入学校"></el-input>
+            <el-input
+              type="text"
+              v-model="ruleForm.school"
+              autocomplete="off"
+              placeholder="请输入学校"
+            ></el-input>
           </el-form-item>
           <el-form-item label="年级" prop="grade">
-            <el-input type="text" v-model="ruleForm.grade" autocomplete="off" placeholder="请输入年级"></el-input>
+            <el-input
+              type="text"
+              v-model="ruleForm.grade"
+              autocomplete="off"
+              placeholder="请输入年级"
+            ></el-input>
           </el-form-item>
           <el-form-item label="博客" prop="blog">
-            <el-input type="text" v-model="ruleForm.blog" autocomplete="off" placeholder="请输入博客地址"></el-input>
+            <el-input
+              type="text"
+              v-model="ruleForm.blog"
+              autocomplete="off"
+              placeholder="请输入博客地址"
+            ></el-input>
           </el-form-item>
           <el-form-item class="submit">
-            <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
+            <el-button type="primary" @click="submitForm('ruleForm')"
+              >保存</el-button
+            >
             <el-button @click="resetForm('ruleForm')">重置</el-button>
             <el-button type="warning" @click="cancle">取消</el-button>
           </el-form-item>
@@ -57,7 +85,7 @@ export default {
   mounted() {
     var username = sessionStorage.getItem("userName");
     var status = sessionStorage.getItem("userStatus");
-    this.url = `/apis/user/api/setAvatar?username=${username}&status=${status}`;
+    this.url = `https://vclass.api.cheeseburgerim.space/user/api/setAvatar?username=${username}&status=${status}`;
     this.imageUrl = this.$route.params.avatar;
     this.ruleForm.motto = this.$route.params.motto;
     this.ruleForm.grade = this.$route.params.grade;
@@ -102,13 +130,13 @@ export default {
         name: "",
         motto: "",
         school: "",
-        blog: ""
+        blog: "",
       },
       rules: {
         name: [{ validator: validateName, trigger: "blur" }],
         motto: [{ validator: validateMotto, trigger: "blur" }],
-        blog: [{ validator: validateBlog, trigger: "blur" }]
-      }
+        blog: [{ validator: validateBlog, trigger: "blur" }],
+      },
     };
   },
   methods: {
@@ -116,7 +144,7 @@ export default {
       this.$router.push({ name: "self" });
     },
     submitForm(formName) {
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate((valid) => {
         let fd = new FormData();
         fd.append("username", sessionStorage.getItem("userName"));
         fd.append("link", this.ruleForm.blog);
@@ -127,18 +155,20 @@ export default {
         fd.append("subtitle", this.ruleForm.motto);
         if (valid) {
           // this.$router.push({ name: "self" });
-          const url = `/apis/user/api/updateInfo`;
+          const url = `https://vclass.api.cheeseburgerim.space/user/api/updateInfo`;
+          // const url=`https://vclass.api.cheeseburgerim.space/user/api/updateInfo?username=panyizhe&link=cheeseburgerim.space&grade=2019&address=天津大学&status=同学&name=潘&subtitle=123`
           fetch(url, {
             method: "POST",
-            body: fd
+            body: fd,
+            credentials: "include",
           })
-            .then(res => res.text())
-            .then(data => {
+            .then((res) => res.text())
+            .then((data) => {
               if (data === `success`) {
                 this.$notify({
                   title: "保存成功",
                   message: "您的个人信息已经保存成功啦✅",
-                  type: "success"
+                  type: "success",
                 });
 
                 this.$router.push({ name: "self" });
@@ -146,17 +176,17 @@ export default {
                 this.$notify.error({
                   title: "错误",
                   message:
-                    "您现在是游客身份或者登录身份信息已过期，无权限编辑个人信息哦😶，3s后将跳转到登录界面！"
+                    "您现在是游客身份或者登录身份信息已过期，无权限编辑个人信息哦😶，3s后将跳转到登录界面！",
                 });
                 setTimeout(() => {
                   this.$router.push({ name: "login" });
                 }, 3000);
               }
             })
-            .catch(error => {
+            .catch((error) => {
               this.$notify.error({
                 title: "错误",
-                message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！"
+                message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！",
               });
             });
         } else {
@@ -174,7 +204,7 @@ export default {
         this.$notify.error({
           title: "错误",
           message:
-            "您现在是游客身份或者登录身份信息已过期，无权限编辑个人信息哦😶，3s后将跳转到登录界面！"
+            "您现在是游客身份或者登录身份信息已过期，无权限编辑个人信息哦😶，3s后将跳转到登录界面！",
         });
         setTimeout(() => {
           this.$router.push({ name: "login" });
@@ -186,13 +216,13 @@ export default {
         this.$notify({
           title: "保存成功",
           message: "您的头像已经保存成功啦✅",
-          type: "success"
+          type: "success",
         });
         // var username = sessionStorage.getItem("userName");
         // // var status = sessionStorage.getItem("userStatus");
         // sessionStorage.setItem(
         //   "userImage",
-        //   `/apis/user/api/getAvatar/${username}`
+        //   `https://vclass.api.cheeseburgerim.space/user/api/getAvatar/${username}`
         // );
       }
     },
@@ -206,8 +236,8 @@ export default {
         this.$message.error("上传头像图片大小不能超过 2MB!");
       }
       return isJPG && isLt2M;
-    }
-  }
+    },
+  },
 };
 </script>
 

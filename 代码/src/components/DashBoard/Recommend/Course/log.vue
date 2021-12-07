@@ -41,7 +41,7 @@ export default {
   created() {
     var teacherUsername = sessionStorage.getItem("teacherUsername");
     var cname = sessionStorage.getItem("cname");
-    const url = `/apis/log/api/getAllLog?teacherUsername=${teacherUsername}&cname=${cname}`;
+    const url = `https://vclass.api.cheeseburgerim.space/log/api/getAllLog?teacherUsername=${teacherUsername}&cname=${cname}`;
     fetch(url, {
       method: `GET`
     })

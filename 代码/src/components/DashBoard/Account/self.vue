@@ -4,35 +4,41 @@
       <div id="imgBx">
         <img :src="avatar" />
         <div id="status">
-          <p id="icon" :title="status">{{status===`老师`?`👨‍🏫`:(status===`学生`?`👨‍🎓`:`🕵️‍`)}}</p>
+          <p id="icon" :title="status">
+            {{
+              status === `teacher` ? `👨‍🏫` : status === `student` ? `👨‍🎓` : `🕵️‍`
+            }}
+          </p>
         </div>
       </div>
     </div>
     <div id="info">
       <div id="me">
-        <h2>{{name}}</h2>
-        <p id="subtitle">「 {{subtitle}} 」</p>
+        <h2>{{ name }}</h2>
+        <p id="subtitle">「 {{ subtitle }} 」</p>
         <div id="other-info">
           <span class="tag">
             <i class="bx bx-building-house"></i>
-            {{address}}
+            {{ address }}
           </span>
           <span class="tag">
             <i class="bx bxs-graduation"></i>
-            {{grade}}
+            {{ grade }}
           </span>
           <span class="tag">
             <i class="bx bx-link"></i>
-            <a :href="link" target="blank">{{link}}</a>
+            <a :href="link" target="blank">{{ link }}</a>
           </span>
         </div>
         <div id="highlight">
           <b>Achievements</b>
           <div id="ach">
-            <img v-for="(item,i) in achs" :key="i" :src="item" />
+            <img v-for="(item, i) in achs" :key="i" :src="item" />
           </div>
         </div>
-        <el-button class="button" type="info" plain @click="edit">Edit profile</el-button>
+        <el-button class="button" type="info" plain @click="edit"
+          >Edit profile</el-button
+        >
       </div>
     </div>
   </div>
@@ -44,73 +50,80 @@ export default {
   created() {
     this.status = sessionStorage.getItem("userStatus");
     var username = sessionStorage.getItem("userName");
-    var userStatus=sessionStorage.getItem("userStatus");
+    var userStatus = sessionStorage.getItem("userStatus");
     if (userStatus === `visitor`) {
-      this.avatar = `/apis/VClass/static/defaultAvatar.jpg`;
+      this.avatar = `https://vclass.api.cheeseburgerim.space/VClass/static/defaultAvatar.jpg`;
     } else {
       // console.log(username);
-      const avatarurl = `/apis/user/api/getAvatar?username=${username}`;
+      const avatarurl = `https://vclass.api.cheeseburgerim.space/user/api/getAvatar?username=${username}`;
       fetch(avatarurl, {
-        method: "get"
+        method: "get",
+        credentials: "include",
       })
-        .then(res => res.text())
-        .then(data => {
-          console.log(data);
-          this.avatar = `/apis` + data;
+        .then((res) => res.text())
+        .then((data) => {
+          // console.log(data);
+          this.avatar = `http://vclass.image.cheeseburgerim.space` + data;
+          if (data === `//VClass//static//defaultAvatar.jpg`) {
+            this.avatar = `http://vclass.api.cheeseburgerim.space` + data;
+          }
         })
-        .catch(error => {
+        .catch((error) => {
           this.$notify.error({
             title: "错误",
-            message: "后台出现图片存储异常，暂时使用默认头像😑"
+            message: "后台出现图片存储异常，暂时使用默认头像😑",
           });
         });
-        // this.avtar=`/apis/VClass/${userStatus}/${userName}/avatar.jpg`
+      // this.avtar=`https://vclass.api.cheeseburgerim.space/VClass/${userStatus}/${userName}/avatar.jpg`
     }
-    const infourl = `/apis/user/api/getInfo?username=${username}`;
+    const infourl = `https://vclass.api.cheeseburgerim.space/user/api/getInfo?username=${username}`;
     fetch(infourl, {
-      method: "get"
+      method: "get",
+      credentials: "include",
     })
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         if (data.hasOwnProperty("result")) {
+          console.log(data);
           this.link = `未填写`;
           this.grade = `未填写`;
           this.address = `未填写`;
           this.subtitle = `未填写`;
-          this.name =sessionStorage.getItem("userName");
+          this.name = sessionStorage.getItem("userName");
         } else {
-          if (data.link != ``) {
+          console.log(data)
+          if (data.link != ``&&data.link != null) {
             this.link = data.link;
             // console.log(data);
           } else {
             this.link = `未填写`;
           }
-          if (data.grade != ``) {
+          if (data.grade != ``&&data.grade != null) {
             this.grade = data.grade;
           } else {
             this.grade = `未填写`;
           }
-          if (data.address != ``) {
+          if (data.address != ``&&data.addresss != null) {
             this.address = data.address;
           } else {
             this.address = `未填写`;
           }
-          if (data.name != ``) {
+          if (data.name != ``&&data.name != null) {
             this.name = data.name;
           } else {
             this.name = sessionStorage.getItem("userName");
           }
-          if (data.subtitle != ``) {
+          if (data.subtitle != ``&&data.subtitle != null) {
             this.subtitle = data.subtitle;
           } else {
             this.subtitle = `未填写`;
           }
         }
       })
-      .catch(error => {
+      .catch((error) => {
         this.$notify.error({
           title: "错误",
-          message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！"
+          message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！",
         });
       });
     // console.log("link"+this.link)
@@ -125,17 +138,17 @@ export default {
           avatar: this.avatar,
           school: this.address,
           motto: this.subtitle,
-          blog: this.link
-        }
+          blog: this.link,
+        },
       });
-    }
+    },
   },
   data() {
     return {
       achs: [
         "../../static/images/ach1.png",
         "../../static/images/ach2.png",
-        "../../static/images/ach3.png"
+        "../../static/images/ach3.png",
       ],
       link: "",
       grade: "",
@@ -145,9 +158,10 @@ export default {
       following: "300",
       name: "",
       subtitle: "",
-      avatar: "/apis/VClass/static/defaultAvatar.jpg"
+      avatar:
+        "https://vclass.api.cheeseburgerim.space/VClass/static/defaultAvatar.jpg",
     };
-  }
+  },
 };
 </script>
 

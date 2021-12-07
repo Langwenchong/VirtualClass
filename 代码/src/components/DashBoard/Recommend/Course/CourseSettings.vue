@@ -1,7 +1,14 @@
 <template>
   <div id="courseSettings">
-    <el-dialog title="提示" :visible.sync="centerDialogVisible" width="30%" center>
-      <span>确定要退出吗？您还未保存/发布修改信息，此时退出之前的操作将不会被保存！</span>
+    <el-dialog
+      title="提示"
+      :visible.sync="centerDialogVisible"
+      width="30%"
+      center
+    >
+      <span
+        >确定要退出吗？您还未保存/发布修改信息，此时退出之前的操作将不会被保存！</span
+      >
       <span slot="footer" class="dialog-footer">
         <el-button @click="centerDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="logout">确 定</el-button>
@@ -10,7 +17,11 @@
     <div id="r-menu" class="animate__animated animate__fadeInRight">
       <div class="title">课程工作台</div>
       <div id="info">
-        <el-form label-position="right" label-width="auto" :model="formLabelAlign">
+        <el-form
+          label-position="right"
+          label-width="auto"
+          :model="formLabelAlign"
+        >
           <el-form-item label="课程名称">
             <el-input
               class="width"
@@ -28,13 +39,27 @@
             ></el-input>
           </el-form-item>
           <el-form-item label="课程学分">
-            <el-input-number class="width" v-model="formLabelAlign.num" :min="1" :max="10"></el-input-number>
+            <el-input-number
+              class="width"
+              v-model="formLabelAlign.num"
+              :min="1"
+              :max="10"
+            ></el-input-number>
           </el-form-item>
           <el-form-item label="课程学时">
-            <el-input-number class="width" v-model="formLabelAlign.hour" :min="1" :max="100"></el-input-number>
+            <el-input-number
+              class="width"
+              v-model="formLabelAlign.hour"
+              :min="1"
+              :max="100"
+            ></el-input-number>
           </el-form-item>
           <el-form-item label="课程类型">
-            <el-select class="width" v-model="formLabelAlign.value" placeholder="请选择">
+            <el-select
+              class="width"
+              v-model="formLabelAlign.value"
+              placeholder="请选择"
+            >
               <el-option
                 v-for="item in formLabelAlign.options"
                 :key="item.value"
@@ -65,16 +90,25 @@
         <div class="left">
           <i class="bx bxs-cookie"></i>
           <span>背景颜色调节：</span>
-          <el-color-picker v-model="color" size="mini" show-alpha :predefine="predefineColors"></el-color-picker>
+          <el-color-picker
+            v-model="color"
+            size="mini"
+            show-alpha
+            :predefine="predefineColors"
+          ></el-color-picker>
         </div>
         <div class="right">
-          <el-button class="item" type="primary" plain @click="submit">发布课程/保存修改</el-button>
-          <el-button plain @click="centerDialogVisible=true">退出编辑</el-button>
+          <el-button class="item" type="primary" plain @click="submit"
+            >发布课程/保存修改</el-button
+          >
+          <el-button plain @click="centerDialogVisible = true"
+            >退出编辑</el-button
+          >
         </div>
       </div>
-      <div id="wrapper" :style="{'background':this.color}">
+      <div id="wrapper" :style="{ background: this.color }">
         <transition-group>
-          <div class="box" v-for="(box,i) in arr" :key="box.id">
+          <div class="box" v-for="(box, i) in arr" :key="box.id">
             <el-button
               class="rubbish"
               type="danger"
@@ -86,7 +120,7 @@
             <div id="audiobox">
               <div class="left">
                 <div class="top">
-                  <b>章节{{i+1}}</b>
+                  <b>章节{{ i + 1 }}</b>
                 </div>
                 <div class="bottom">
                   <input
@@ -99,8 +133,12 @@
                   />
                   <div class="choices">
                     <transition-group>
-                      <div class="choice" v-for="(el,j) in arr[i].tags" :key="el.id">
-                        <span>知识点{{j+1}}:</span>
+                      <div
+                        class="choice"
+                        v-for="(el, j) in arr[i].tags"
+                        :key="el.id"
+                      >
+                        <span>知识点{{ j + 1 }}:</span>
                         <div class="op">
                           <el-input
                             type="input"
@@ -114,9 +152,11 @@
                             icon="el-icon-info"
                             icon-color="red"
                             title="确定删除这个标签吗？"
-                            @confirm="deltag(i,j)"
+                            @confirm="deltag(i, j)"
                           >
-                            <el-button slot="reference" class="confirm">删除</el-button>
+                            <el-button slot="reference" class="confirm"
+                              >删除</el-button
+                            >
                           </el-popconfirm>
                         </div>
                       </div>
@@ -142,12 +182,13 @@ export default {
       var cname = sessionStorage.getItem("cname");
       this.disabled = true;
       this.formLabelAlign.courseName = cname;
-      const url = `/apis/course/chapter/api/getAllChapter?username=${username}&cname=${cname}`;
+      const url = `https://vclass.api.cheeseburgerim.space/course/chapter/api/getAllChapter?username=${username}&cname=${cname}`;
       fetch(url, {
-        method: "GET"
+        method: "GET",
+        credentials: "include",
       })
-        .then(res => res.json())
-        .then(data => {
+        .then((res) => res.json())
+        .then((data) => {
           this.formLabelAlign.courseInfo = data[0].vcourse.cdesc;
           this.formLabelAlign.value = data[0].vcourse.ctype;
           this.formLabelAlign.num = data[0].vcourse.credit;
@@ -173,10 +214,10 @@ export default {
             this.arr.push(chapter);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.$notify.error({
             title: "错误",
-            message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！"
+            message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！",
           });
         });
     }
@@ -195,7 +236,7 @@ export default {
       ) {
         this.$notify.error({
           title: "错误",
-          message: "❌请确保课程基本信息不为空！"
+          message: "❌请确保课程基本信息不为空！",
         });
         v = false;
       }
@@ -205,7 +246,7 @@ export default {
           if (!v) {
             this.$notify.error({
               title: "错误",
-              message: "❌请确保各章节名称不为空且没有重复名称的章节！"
+              message: "❌请确保各章节名称不为空且没有重复名称的章节！",
             });
             break;
           }
@@ -228,7 +269,7 @@ export default {
           if (!v) {
             this.$notify.error({
               title: "错误",
-              message: "❌请确保每一章节内标签名称不为空且没有重复名称的标签！"
+              message: "❌请确保每一章节内标签名称不为空且没有重复名称的标签！",
             });
             break;
           }
@@ -259,29 +300,31 @@ export default {
         fd.append("cdesc", this.formLabelAlign.courseInfo);
         fd.append("credit", this.formLabelAlign.num);
         fd.append("duration", this.formLabelAlign.hour);
-        const courseInfoUrl = `/apis/course/api/updateCourseInfo`;
+        const courseInfoUrl = `https://vclass.api.cheeseburgerim.space/course/api/updateCourseInfo`;
         fetch(courseInfoUrl, {
-          method: "POST",
-          body: fd
+          method: "post",
+          credentials: "include",
+          body: fd,
         })
-          .then(res => res.text())
-          .then(data => {
+          .then((res) => res.text())
+          .then((data) => {
+            console.log(data)
             if (data === `success`) {
               this.deleteAllChapter();
             } else if (data === `fail`) {
               this.$notify.error({
                 title: "错误",
-                message: "课程创建失败,您的用户身份已过期,3s后跳转到登录页面!"
+                message: "课程创建失败,您的用户身份已过期,3s后跳转到登录页面!",
               });
               setTimeout(() => {
                 this.$router.push({ name: "login" });
               }, 3000);
             }
           })
-          .catch(error => {
+          .catch((error) => {
             this.$notify.error({
               title: "错误",
-              message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！"
+              message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！",
             });
           });
       }
@@ -290,30 +333,31 @@ export default {
     deleteAllChapter() {
       var username = sessionStorage.getItem("userName");
       var cname = this.formLabelAlign.courseName;
-      const deleteUrl = `/apis/course/chapter/api/deleteAllChapter?username=${username}&cname=${cname}`;
+      const deleteUrl = `https://vclass.api.cheeseburgerim.space/course/chapter/api/deleteAllChapter?username=${username}&cname=${cname}`;
       fetch(deleteUrl, {
-        method: "GET"
+        method: "get",
+        credentials: "include",
       })
-        .then(res => res.text())
-        .then(data => {
+        .then((res) => res.text())
+        .then((data) => {
           if (data === `success`) {
             this.updateChapter();
           } else if (data === `fail`) {
             this.$notify.error({
               title: "错误",
-              message: "数据库章节清空出现错误"
+              message: "数据库章节清空出现错误",
             });
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.$notify.error({
             title: "错误",
-            message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！"
+            message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！",
           });
         });
     },
     updateChapter() {
-      const url = `/apis/course/chapter/api/updateChapter`;
+      const url = `https://vclass.api.cheeseburgerim.space/course/chapter/api/updateChapter`;
       var username = sessionStorage.getItem("userName");
       var suc = true;
       for (let i = 0; i < this.arr.length; i++) {
@@ -331,24 +375,25 @@ export default {
         fd.append("chtag", chtag);
         fetch(url, {
           method: "POST",
-          body: fd
+          body: fd,
+          credentials: "include",
         })
-          .then(res => res.text())
-          .then(data => {
+          .then((res) => res.text())
+          .then((data) => {
             if (data === `success`) {
-              this.$router.push({name:'self'});
+              this.$router.push({ name: "self" });
             } else if (data === `fail`) {
               suc = false;
               this.$notify.error({
                 title: "错误",
-                message: "章节信息提交出现错误"
+                message: "章节信息提交出现错误",
               });
             }
           })
-          .catch(error => {
+          .catch((error) => {
             this.$notify.error({
               title: "错误",
-              message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！"
+              message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！",
             });
           });
       }
@@ -356,7 +401,7 @@ export default {
         this.$notify({
           title: "保存成功",
           message: "您修改的课程信息已经保存成功啦✅",
-          type: "success"
+          type: "success",
         });
         this.$router.push({ name: "self" });
       }
@@ -367,7 +412,7 @@ export default {
         id: this.id,
         title: ``,
         tags: [],
-        disabled: false
+        disabled: false,
       });
       this.id++;
     },
@@ -375,7 +420,7 @@ export default {
       var idx = this.arr[i].tags.length + 1;
       this.arr[i].tags.push({
         id: this.id * 10 + idx,
-        tagName: ``
+        tagName: ``,
       });
     },
     deltag(i, j) {
@@ -383,19 +428,19 @@ export default {
     },
     del(i) {
       this.arr.splice(i, 1);
-    }
+    },
   },
   mounted() {
     let box = document.querySelectorAll(".box");
     for (let i = 0; i < box.length; i++) {
-      box[i].onmouseenter = function(event) {
+      box[i].onmouseenter = function (event) {
         let ripple = box[i].querySelector(".ripple");
         ripple.classList.add("animation");
         ripple.style.width = this.offsetWidth + "px";
         ripple.style.height = this.offsetWidth + "px";
         ripple.style.top = -(this.offsetHeight - event.offsetY) + "px";
         ripple.style.left = -(this.offsetWidth / 2 - event.offsetX) + "px";
-        setTimeout(function() {
+        setTimeout(function () {
           ripple.classList.remove("animation");
         }, 500);
       };
@@ -413,18 +458,18 @@ export default {
         options: [
           {
             value: "核心专业课",
-            label: "核心专业课"
+            label: "核心专业课",
           },
           {
             value: "综合实践课",
-            label: "综合实践课"
+            label: "综合实践课",
           },
           {
             value: "素养选修课",
-            label: "素养选修课"
-          }
+            label: "素养选修课",
+          },
         ],
-        value: ""
+        value: "",
       },
       id: 1,
       arr: [],
@@ -449,17 +494,17 @@ export default {
         "#FDE6E0",
         "#E3EDCD",
         "#DCE2F1",
-        "#E9EBFE"
-      ]
+        "#E9EBFE",
+      ],
     };
   },
   directives: {
     focus: {
-      inserted: function(el) {
+      inserted: function (el) {
         el.focus();
-      }
-    }
-  }
+      },
+    },
+  },
 };
 </script>
 

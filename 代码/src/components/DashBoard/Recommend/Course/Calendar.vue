@@ -111,9 +111,10 @@ export default {
     load() {
       var username = sessionStorage.getItem("teacherUsername");
       var cname = sessionStorage.getItem("cname");
-      const url = `/apis/course/schedule/api/getSchedule?username=${username}&cname=${cname}`;
+      const url = `https://vclass.api.cheeseburgerim.space/course/schedule/api/getSchedule?username=${username}&cname=${cname}`;
       fetch(url, {
-        method: "GET"
+        method: "get",
+                  credentials: "include",
       })
         .then(res => res.json())
         .then(data => {
@@ -345,9 +346,10 @@ export default {
         var username = sessionStorage.getItem("userName");
         var cname = sessionStorage.getItem("cname");
         // console.log(this.dates);
-        const durl = `/apis/course/schedule/api/deleteSchedule?username=${username}&cname=${cname}`;
+        const durl = `https://vclass.api.cheeseburgerim.space/course/schedule/api/deleteSchedule?username=${username}&cname=${cname}`;
         fetch(durl, {
-          method: "GET"
+          method: "get",
+                  credentials: "include",
         })
           .then(res => res.text())
           .then(data => {
@@ -364,7 +366,7 @@ export default {
                 fd.append("date", this.dates[i].date);
                 fd.append("type", this.dates[i].type);
                 fd.append("content", this.dates[i].content);
-                const url = `/apis/course/schedule/api/setSchedule`;
+                const url = `https://vclass.api.cheeseburgerim.space/course/schedule/api/setSchedule`;
                 fetch(url, {
                   method: "POST",
                   body: fd
@@ -384,9 +386,10 @@ export default {
                       clock += month + "-";
                       if (day < 10) clock += "0";
                       clock += day;
-                      const actUrl = `/apis/user/api/setAct?username=${username}&date=${clock}`;
+                      const actUrl = `https://vclass.api.cheeseburgerim.space/user/api/setAct?username=${username}&date=${clock}`;
                       fetch(actUrl, {
-                        method: "GET"
+                        method: "get",
+                  credentials: "include",
                       })
                         .then(res => res.text())
                         .then(data => {});
@@ -440,10 +443,11 @@ export default {
       fd.append("timestamp", timestamp);
       fd.append("teacherUsername", teacherUsername);
       fd.append("cname", cname);
-      const url = `/apis/log/api/addLog`;
+      const url = `https://vclass.api.cheeseburgerim.space/log/api/addLog`;
       fetch(url, {
-        method: "POST",
-        body: fd
+       method: "POST",
+            body: fd,
+            credentials: "include",
       })
         .then(res => res.text())
         .then(data => {
@@ -458,9 +462,10 @@ export default {
           clock += month + "-";
           if (day < 10) clock += "0";
           clock += day;
-          const actUrl = `/apis/user/api/setAct?username=${username}&date=${clock}`;
+          const actUrl = `https://vclass.api.cheeseburgerim.space/user/api/setAct?username=${username}&date=${clock}`;
           fetch(actUrl, {
-            method: "GET"
+            method: "get",
+                  credentials: "include",
           })
             .then(res => res.text())
             .then(data => {
