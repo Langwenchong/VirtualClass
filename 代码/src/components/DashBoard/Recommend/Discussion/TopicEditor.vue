@@ -18,9 +18,9 @@
       <el-upload
         style="display: none"
         class="quill-picture-uploader"
-        action="http://localhost:8080/project/uploadPic"
+        action="a"
         :before-upload="bfUpload"
-        :on-success="uploadSuccess"
+        with-credentials
       >
       </el-upload>
       <quill-editor
@@ -30,9 +30,9 @@
         :options="editorOption"
         @change="onEditorChange($event)"
       />
-      <div class="output code" style="display: none">
+      <!-- <div class="output code" style="display: none">
         <code class="hljs" v-html="contentCode"></code>
-      </div>
+      </div> -->
     </div>
     <div id="r-nav" class="animate__animated animate__fadeInRight">
       <div class="backup" @click="centerDialogVisible = true">
@@ -56,7 +56,7 @@
           type="textarea"
           :autosize="{ minRows: 6, maxRows: 8 }"
           placeholder="请输入话题简介内容(大约在100字左右)"
-          v-model="discription"
+          v-model="description"
         >
         </el-input>
       </div>
@@ -65,13 +65,12 @@
         <el-upload
           class="upload"
           :show-file-list="true"
-          ref="upload"
+          ref="coverImageUpload"
           drag
           action="a"
           :multiple="false"
           :auto-upload="false"
           :limit="1"
-          :on-exceed="warn"
           :before-upload="beforeUpload"
           accept=".png,  .jpg, "
         >
@@ -82,7 +81,7 @@
           </div>
         </el-upload>
       </div>
-      <div class="submit">
+      <div class="submit" @click="submit">
         <strong><i class="fad fa-paper-plane"></i>&nbsp;&nbsp;发布话题</strong>
       </div>
     </div>
@@ -105,6 +104,19 @@ export default {
     quillEditor,
   },
   name: "TopicEditor",
+  created() {
+    const url = `https://vclass.api.cheeseburgerim.space/topic/api/addTopicId?username=${sessionStorage.getItem(
+      "userName"
+    )}`;
+    fetch(url, {
+      method: "get",
+      credentials: "include",
+    })
+      .then((res) => res.text())
+      .then((data) => {
+        this.tid = data;
+      });
+  },
   data() {
     const toolbarOptions = [
       ["bold", "italic", "underline", "strike"],
@@ -120,9 +132,11 @@ export default {
     ];
 
     return {
+      coverImage: null,
+      tid: ``,
       centerDialogVisible: false,
       title: ``,
-      discription: ``,
+      description: ``,
       content: "", // 富文本里的内容
       editorOption: {
         // 富文本编辑器的工具栏
@@ -151,6 +165,10 @@ export default {
     };
   },
   methods: {
+    beforeUpload(file) {
+      // console.log(file);
+      this.coverImage = file;
+    },
     backup() {
       this.$router.push({ name: "TopicList" });
     },
@@ -168,19 +186,132 @@ export default {
         this.$message.error("图片插入失败,请检查文件格式");
         return;
       }
+
+      const fileurl = `https://vclass.api.cheeseburgerim.space/topic/api/uploadTopicImage`;
+      let fd = new FormData();
+      fd.append("topicId", this.tid);
+      fd.append("username", sessionStorage.getItem("userName"));
+      fd.append("image", file);
+      fetch(fileurl, {
+        method: `post`,
+        credentials: "include",
+        body: fd,
+      })
+        .then((res) => res.text())
+        .then((data) => {
+          // this.urlList.push(response.url);
+          let quill = this.$refs.myQuillEditor.quill;
+          if (data != `fail`) {
+            //获取光标所在位置
+            let length = quill.getSelection().index;
+            //插入图片
+            quill.insertEmbed(
+              length,
+              "image",
+              "http://vclass.static.cheeseburgerim.space" + data
+            );
+            //移动光标到图片后
+            quill.setSelection(length + 1);
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message: "图片上传失败！",
+            });
+          }
+        })
+        .catch((error) => {
+          this.$notify.error({
+            title: "错误",
+            message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！",
+          });
+        });
     },
-    //正文插入图片上传成功调用
-    uploadSuccess(response, file, fileList) {
-      this.urlList.push(response.url);
-      let quill = this.$refs.myQuillEditor.quill;
-      if (response.url != null) {
-        //获取光标所在位置
-        let length = quill.getSelection().index;
-        //插入图片
-        quill.insertEmbed(length, "image", response.url);
-        //移动光标到图片后
-        quill.setSelection(length + 1);
+    // //正文插入图片上传成功调用
+    // uploadSuccess(response, file, fileList) {
+    //   this.urlList.push(response.url);
+    //   let quill = this.$refs.myQuillEditor.quill;
+    //   if (response.url != null) {
+    //     //获取光标所在位置
+    //     let length = quill.getSelection().index;
+    //     //插入图片
+    //     quill.insertEmbed(length, "image", response.url);
+    //     //移动光标到图片后
+    //     quill.setSelection(length + 1);
+    //   }
+    // },
+    submit() {
+      this.$refs.coverImageUpload.submit();
+      const addurl = `https://vclass.api.cheeseburgerim.space/topic/api/add`;
+      if (this.content != `` && this.title != `` && this.description != ``) {
+        let fd = new FormData();
+        fd.append("username", sessionStorage.getItem("userName"));
+        fd.append("fid", sessionStorage.getItem("fid"));
+        fd.append("content", this.content);
+        fd.append("timestamp", this.currentTime());
+        fd.append("title", this.title);
+        fd.append("topicId", this.tid);
+        fd.append("description", this.description);
+        if (this.coverImage != null) {
+          // console.log(`hhhh`)
+          fd.append("coverImage", this.coverImage);
+        }
+        fetch(addurl, {
+          method: "post",
+          credentials: "include",
+          body: fd,
+        })
+          .then((res) => res.text())
+          .then((data) => {
+            // console.log(data);
+            if (data === `success`) {
+              this.$notify({
+                title: "发布成功",
+                message: "您的话题已成功发布啦✅",
+                type: "success",
+              });
+              this.$router.push({ name: "TopicList" });
+            } else {
+              this.$notify.error({
+                title: "发布失败",
+                message: "话题发布失败请稍后尝试！",
+              });
+            }
+          })
+          .catch((error) => {
+            this.$notify.error({
+              title: "错误",
+              message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！",
+            });
+          });
+      } else {
+        this.$notify.error({
+          title: "发布失败",
+          message: "请保证信息填写完整！",
+        });
       }
+    },
+    currentTime() {
+      var now = new Date();
+      var year = now.getFullYear(); //年
+      var month = now.getMonth() + 1; //月
+      var day = now.getDate(); //日
+
+      var hh = now.getHours(); //时
+      var mm = now.getMinutes(); //分
+      var ss = now.getSeconds();
+
+      var clock = year + "-";
+      if (month < 10) clock += "0";
+      clock += month + "-";
+      if (day < 10) clock += "0";
+      clock += day + " ";
+      if (hh < 10) clock += "0";
+      clock += hh + ":";
+      if (mm < 10) clock += "0";
+      clock += mm + ":";
+      if (ss < 10) clock += "0";
+      clock += ss;
+      return clock;
     },
   },
 };

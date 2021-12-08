@@ -201,7 +201,7 @@ export default {
                   }
                   this.chapters[data[i].chnum - 1].files.push(file);
                 }
-                console.log(this.chapters);
+                // console.log(this.chapters);
                 setTimeout(() => {
                   this.activeChapters(0);
                   this.activeFiles(0);
@@ -622,7 +622,7 @@ export default {
         });
     },
     backup() {
-      this.$router.go(-1);
+      this.$router.push({name:'log'});
     },
     tagsList() {
       var tagsList = document.getElementsByClassName("tags-list")[0];
@@ -805,7 +805,7 @@ export default {
             // files.splice(i,1);
           } else {
             //标签检验
-            console.log(`hhh`);
+            // console.log(`hhh`);
             var arr1 = origin[i].tags;
             var arr2 = this.filtersArr;
             v = this.getArrDifference(arr1, arr2);

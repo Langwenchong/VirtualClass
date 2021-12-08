@@ -137,6 +137,7 @@ export default {
                 });
                 sessionStorage.setItem("userName", username);
                 sessionStorage.setItem("userStatus", data.status);
+                sessionStorage.setItem("userImage","https://vclass.api.cheeseburgerim.space/VClass/static/defaultAvatar.jpg")
                 // console.log(sessionStorage.getItem("userStatus"));
                 var now = new Date();
                 var year = now.getFullYear(); //年
@@ -187,6 +188,7 @@ export default {
       sessionStorage.setItem("userName", "visitor");
       sessionStorage.setItem("sessionId", "visitor");
       sessionStorage.setItem("userStatus", "visitor");
+      sessionStorage.setItem("userImage","https://vclass.api.cheeseburgerim.space/VClass/static/defaultAvatar.jpg")
       var date = new Date();
       var s = "日一二三四五六";
       const h = this.$createElement;

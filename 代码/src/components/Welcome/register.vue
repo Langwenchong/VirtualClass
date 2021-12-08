@@ -170,6 +170,7 @@ export default {
                 sessionStorage.setItem("sessionId", data);
                 sessionStorage.setItem("userName", username);
                 sessionStorage.setItem("userStatus", status);
+                sessionStorage.setItem("userImage","https://vclass.api.cheeseburgerim.space/VClass/static/defaultAvatar.jpg")
                 var now = new Date();
                 var year = now.getFullYear(); //年
                 var month = now.getMonth() + 1; //月

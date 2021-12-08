@@ -63,10 +63,11 @@ export default {
         .then((res) => res.text())
         .then((data) => {
           // console.log(data);
-          this.avatar = `http://vclass.image.cheeseburgerim.space` + data;
+          this.avatar = `http://vclass.static.cheeseburgerim.space` + data;
           if (data === `//VClass//static//defaultAvatar.jpg`) {
-            this.avatar = `http://vclass.api.cheeseburgerim.space` + data;
+            this.avatar = `http://vclass.static.cheeseburgerim.space` + data;
           }
+          sessionStorage.setItem("userImage", this.avatar);
         })
         .catch((error) => {
           this.$notify.error({
@@ -84,14 +85,14 @@ export default {
       .then((res) => res.json())
       .then((data) => {
         if (data.hasOwnProperty("result")) {
-          console.log(data);
+          // console.log(data);
           this.link = `未填写`;
           this.grade = `未填写`;
           this.address = `未填写`;
           this.subtitle = `未填写`;
           this.name = sessionStorage.getItem("userName");
         } else {
-          console.log(data);
+          // console.log(data);
           if (data.link != `` && data.link != null) {
             this.link = data.link;
             // console.log(data);

@@ -119,9 +119,9 @@ export default {
       })
         .then((res) => res.text())
         .then((data) => {
-          this.avatar = `http://vclass.image.cheeseburgerim.space` + data;
+          this.avatar = `http://vclass.static.cheeseburgerim.space` + data;
            if(data===`//VClass//static//defaultAvatar.jpg`){
-            this.avatar = `http://vclass.api.cheeseburgerim.space` + data;
+            this.avatar = `http://vclass.static.cheeseburgerim.space` + data;
           }
         })
         .catch((error) => {

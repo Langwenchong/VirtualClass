@@ -1,6 +1,6 @@
 <template>
   <div id="file">
-    <h2>《{{file.name}}》</h2>
+    <h2>《{{ file.name }}》</h2>
     <div class="book-wrapper">
       <a
         :href="read"
@@ -14,13 +14,17 @@
         </div>
       </a>
     </div>
-    <p class="info">游客仅能在线阅览文件，只有同学和教师身份可以下载文件!同时您的阅览文件和下载文件的操作都将增加活跃度值可在个人主页进行查看！</p>
+    <p class="info">
+      游客仅能在线阅览文件，只有同学和教师身份可以下载文件!同时您的阅览文件和下载文件的操作都将增加活跃度值可在个人主页进行查看！
+    </p>
     <a :href="read" target="_blank" @click="watchFileLog">
       <el-button type="warning" plain v-if="show">阅览该文件</el-button>
     </a>
     <a :href="download" download target="_blank">
       <!-- 下载该文件 -->
-      <el-button type="primary" plain v-if="show" @click="downloadFileLog">下载该文件</el-button>
+      <el-button type="primary" plain v-if="show" @click="downloadFileLog"
+        >下载该文件</el-button
+      >
     </a>
     <el-button type="danger" plain @click="discussion">前往讨论区</el-button>
   </div>
@@ -52,12 +56,12 @@ export default {
       fd.append("cname", cname);
       const url = `https://vclass.api.cheeseburgerim.space/log/api/addLog`;
       fetch(url, {
-       method: "POST",
-            body: fd,
-            credentials: "include",
+        method: "POST",
+        body: fd,
+        credentials: "include",
       })
-        .then(res => res.text())
-        .then(data => {
+        .then((res) => res.text())
+        .then((data) => {
           if (data === `success`) {
             // console.log("save log success");
             var username = sessionStorage.getItem("userName");
@@ -73,23 +77,23 @@ export default {
             const actUrl = `https://vclass.api.cheeseburgerim.space/user/api/setAct?username=${username}&date=${clock}`;
             fetch(actUrl, {
               method: "get",
-                  credentials: "include",
+              credentials: "include",
             })
-              .then(res => res.text())
-              .then(data => {});
+              .then((res) => res.text())
+              .then((data) => {});
           } else if (data === `fail`) {
             this.$notify.error({
               title: "错误",
-              message: "日志存储失败🛠️！"
+              message: "日志存储失败🛠️！",
             });
           } else {
             console.log(data);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.$notify.error({
             title: "错误",
-            message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！"
+            message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！",
           });
         });
       // alert(`hhhh`);
@@ -110,12 +114,12 @@ export default {
       fd.append("cname", cname);
       const url = `https://vclass.api.cheeseburgerim.space/log/api/addLog`;
       fetch(url, {
-       method: "POST",
-            body: fd,
-            credentials: "include",
+        method: "POST",
+        body: fd,
+        credentials: "include",
       })
-        .then(res => res.text())
-        .then(data => {
+        .then((res) => res.text())
+        .then((data) => {
           // console.log("save log success");
           var username = sessionStorage.getItem("userName");
           var now = new Date();
@@ -130,15 +134,15 @@ export default {
           const actUrl = `https://vclass.api.cheeseburgerim.space/user/api/setAct?username=${username}&date=${clock}`;
           fetch(actUrl, {
             method: "get",
-                  credentials: "include",
+            credentials: "include",
           })
-            .then(res => res.text())
-            .then(data => {});
+            .then((res) => res.text())
+            .then((data) => {});
         })
-        .catch(error => {
+        .catch((error) => {
           this.$notify.error({
             title: "错误",
-            message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！"
+            message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！",
           });
         });
       // alert(`hhhh`);
@@ -167,6 +171,11 @@ export default {
       return clock;
     },
     discussion() {
+      // console.log(this.file);
+      sessionStorage.setItem(
+        "fid",
+        this.file.uploader + "-" + this.file.type + "-" + this.file.name
+      );
       this.$router.push({ name: "TopicList" });
     },
     getFile() {
@@ -179,13 +188,13 @@ export default {
         method: `GET`,
         credentials: "include",
       })
-        .then(res => res.text())
-        .then(data => {
-          console.log(data);
+        .then((res) => res.text())
+        .then((data) => {
+          // console.log(data);
           if (data != `fail`) {
             // console.log(data);
-            this.download = `http://vclass.image.cheeseburgerim.space` + data;
-          } 
+            this.download = `http://vclass.static.cheeseburgerim.space` + data;
+          }
           // else {
           //   this.$notify.error({
           //     title: "错误",
@@ -193,17 +202,17 @@ export default {
           //   });
           // }
         })
-        .catch(error => {
+        .catch((error) => {
           this.$notify.error({
             title: "错误",
-            message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！"
+            message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！",
           });
         });
-    }
+    },
   },
   data() {
     return {
-      download: ``
+      download: ``,
     };
   },
   computed: {
@@ -235,8 +244,8 @@ export default {
       } else {
         return "../../../../../static/images/file.png";
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
