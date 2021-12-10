@@ -6,9 +6,8 @@
           class="topicBox wow animate__animated animate__fadeInUp"
           v-for="(topic, i) in filterTopics"
           :key="topic.topicId"
-          @click="goToComment(i)"
         >
-          <h3>{{ topic.title }}</h3>
+          <h3  @click="goToComment(i)">{{ topic.title }}</h3>
           <div class="main">
             <p class="content">
               {{ topic.description }}
@@ -220,6 +219,10 @@ export default {
           obj.questioner = data[i].username;
           obj.avatar =
             "http://vclass.static.cheeseburgerim.space" + data[i].userAvatar;
+          if (data[i].userAvatar === `//VClass//static//defaultAvatar.jpg`) {
+            obj.avatar =
+              `https://vclass.api.cheeseburgerim.space` + data[i].userAvatar;
+          }
           obj.topicId = data[i].topicId;
           obj.reply = data[i].isTeacherReply === 0 ? false : true;
           // console.log(obj.isLike);
@@ -252,7 +255,7 @@ export default {
                 }, 3000);
               }
             });
-          console.log(this.topics[i].isLike);
+          // console.log(this.topics[i].isLike);
         }
       })
       .catch((error) => {
@@ -271,7 +274,10 @@ export default {
     };
   },
   methods: {
-    goToComment() {},
+    goToComment(i) {
+      sessionStorage.setItem("tid", this.topics[i].topicId);
+      this.$router.push({ name: "Topicbbs" });
+    },
     subscribe(i) {
       if (this.topics[i].isLike === true) {
         this.topics[i].subscribe -= 1;

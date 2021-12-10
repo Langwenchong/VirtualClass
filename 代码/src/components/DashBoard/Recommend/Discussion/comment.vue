@@ -10,28 +10,26 @@
         {{ comment.content }}
       </div>
       <div class="footer">
-        <div class="like">🤝 {{ comment.like }}</div>
+        <div class="like" @click="rootLike">
+          {{ comment.isLike === false ? `👏` : `🤝` }} {{ comment.like }}
+        </div>
         <small>{{ comment.comments.length }} replies</small>
       </div>
     </div>
-    <div id="reply">
+    <div id="reply" v-if="comment.comments.length > 0">
       <div class="box" v-for="(item, j) in comment.comments" :key="j">
         <div class="head">
           <img :src="item.avatar" alt="" />
           <strong>{{ item.name }}</strong>
           <span>{{ item.time }}</span>
-          <div class="like">🤝 {{ item.like }}</div>
+          <div class="like" @click="childLike(j)">{{ item.isLike === false ? `👏` : `🤝` }} {{ item.like }}</div>
         </div>
         <div class="main">{{ item.content }}</div>
       </div>
     </div>
     <div id="entrance" v-show="!show">
       <img :src="me" alt="" />
-      <el-input
-        v-model="input"
-        placeholder="Write a Reply"
-        @focus="show = true"
-      ></el-input>
+      <el-input placeholder="Write a Reply" @focus="show = true"></el-input>
     </div>
     <div id="commentEditor" v-show="show">
       <div class="menu">
@@ -64,12 +62,16 @@
         <div>
           <el-button
             type="info"
-            @click="show = false"
+            @click="
+              show = false;
+              mycomment = ``;
+            "
             class="button"
             style="filter: brightness(120%); opacity: 0.9"
             >Cancel</el-button
           >
           <el-button
+            @click="addChild"
             class="button"
             type="success"
             style="filter: brightness(90%); opacity: 0.9"
@@ -98,8 +100,138 @@ export default {
     };
   },
   methods: {
+    addChild() {
+      if (this.mycomment === ``) {
+        this.$notify.error({
+          title: "发布错误",
+          message: "❌请确保话题内容不为空!",
+        });
+        return;
+      }
+      const commenturl = `https://vclass.api.cheeseburgerim.space/comment/api/addChild`;
+      let fd = new FormData();
+      fd.append("username", sessionStorage.getItem("userName"));
+      fd.append("topicId", sessionStorage.getItem("tid"));
+      fd.append("content", this.mycomment);
+      fd.append("timestamp", this.currentTime());
+      fd.append("rootCommentId", this.comment.commentId);
+      fetch(commenturl, {
+        method: "post",
+        credentials: "include",
+        body: fd,
+      })
+        .then((res) => res.text())
+        .then((data) => {
+          // console.log(data);
+          if (data === `success`) {
+            this.$notify({
+              title: "回复成功",
+              message: "回复成功发布啦✅",
+              type: "success",
+            });
+            //刷新评论
+            this.mycomment = ``;
+            this.$parent.getRootComments();
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message:
+                "您现在是游客身份或者登录身份信息已过期，无权限编辑个人信息哦😶，3s后将跳转到登录界面！",
+            });
+            // setTimeout(() => {
+            //   this.$router.push({ name: "login" });
+            // }, 3000);
+          }
+        });
+    },
+    rootLike() {
+      if (this.comment.isLike === true) {
+        this.comment.like -= 1;
+      } else {
+        this.comment.like += 1;
+      }
+      this.comment.isLike = !this.comment.isLike;
+      var url = `https://vclass.api.cheeseburgerim.space/comment/api/likeComment?commentId=${
+        this.comment.commentId
+      }&username=${sessionStorage.getItem("userName")}`;
+      fetch(url, {
+        method: "get",
+        credentials: "include",
+      })
+        .then((res) => res.text())
+        .then((data) => {
+          // alert(data);
+          if (data === `fail`) {
+            this.$notify.error({
+              title: "错误",
+              message:
+                "您现在是游客身份或者登录身份信息已过期，无权限编辑个人信息哦😶，3s后将跳转到登录界面！",
+            });
+            setTimeout(() => {
+              this.$router.push({ name: "login" });
+            }, 3000);
+          }
+        });
+    },
+    childLike(j) {
+      if (this.comment.comments[j].isLike === true) {
+        this.comment.comments[j].like -= 1;
+      } else {
+        this.comment.comments[j].like += 1;
+      }
+      this.comment.comments[j].isLike = !this.comment.comments[j].isLike;
+      var url = `https://vclass.api.cheeseburgerim.space/comment/api/likeComment?commentId=${
+        this.comment.comments[j].commentId
+      }&username=${sessionStorage.getItem("userName")}`;
+      fetch(url, {
+        method: "get",
+        credentials: "include",
+      })
+        .then((res) => res.text())
+        .then((data) => {
+          // alert(data);
+          if (data === `fail`) {
+            this.$notify.error({
+              title: "错误",
+              message:
+                "您现在是游客身份或者登录身份信息已过期，无权限编辑个人信息哦😶，3s后将跳转到登录界面！",
+            });
+            setTimeout(() => {
+              this.$router.push({ name: "login" });
+            }, 3000);
+          }
+        });
+    },
+    currentTime() {
+      var now = new Date();
+      var year = now.getFullYear(); //年
+      var month = now.getMonth() + 1; //月
+      var day = now.getDate(); //日
+
+      var hh = now.getHours(); //时
+      var mm = now.getMinutes(); //分
+      var ss = now.getSeconds();
+
+      var clock = year + "-";
+      if (month < 10) clock += "0";
+      clock += month + "-";
+      if (day < 10) clock += "0";
+      clock += day + " ";
+      if (hh < 10) clock += "0";
+      clock += hh + ":";
+      if (mm < 10) clock += "0";
+      clock += mm + ":";
+      if (ss < 10) clock += "0";
+      clock += ss;
+      return clock;
+    },
     addEmotion(e) {
       this.mycomment += e;
+    },
+  },
+  watch: {
+    obj(n, o) {
+      this.comment = n;
     },
   },
 };
@@ -119,6 +251,7 @@ export default {
   border: 1px solid var(--text3);
 }
 #comment #entrance {
+  border-top: 1px solid var(--text3);
   width: 100%;
   box-sizing: border-box;
   display: flex;
@@ -140,10 +273,10 @@ export default {
 }
 #comment #reply {
   width: 100%;
-  min-height: 100px;
+  /* min-height: 100px; */
   background: var(--background3);
   border-top: 1px solid var(--text3);
-  border-bottom: 1px solid var(--text3);
+  /* border-bottom: 1px solid var(--text3); */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -220,12 +353,13 @@ export default {
 }
 #commentEditor {
   /* margin-top: 20px; */
+  overflow: hidden;
   font-size: 0.875rem;
-  border-radius: 0.25rem;
+  /* border-radius: 0.25rem; */
   width: 100%;
   min-height: 200px;
   background: var(--background2);
-  /* border: 1px solid var(--text3); */
+  border-top: 1px solid var(--text3);
 }
 #commentEditor .main {
   margin: 0 auto;

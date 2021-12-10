@@ -147,7 +147,7 @@
     <div id="comments" class="animate__animated animate__fadeIn">
       <div class="head">
         <div><i class="fas fa-comments"></i>&nbsp;评论</div>
-        <div><i class="fas fa-reply" @click="backup"></i>&nbsp;返回</div>
+        <div @click="backup"><i class="fas fa-reply"></i>&nbsp;返回</div>
       </div>
       <div id="commentEditor">
         <div class="menu">
@@ -178,6 +178,7 @@
         <div class="footer">
           <small>请保持文明发言哦~</small>
           <el-button
+            @click="addRoot"
             class="button"
             type="success"
             style="filter: brightness(90%); opacity: 0.9"
@@ -185,7 +186,7 @@
           >
         </div>
       </div>
-      <comment v-for="(comment, i) in arr" :key="i" :obj="comment" />
+      <comment v-for="(comment, i) in arr" :key="i" :obj="arr[i]" />
     </div>
   </div>
 </template>
@@ -201,88 +202,29 @@ export default {
     comment,
   },
   name: "Topicbbs",
+  created() {
+    const url = `https://vclass.api.cheeseburgerim.space/topic/api/getSingleTopic?topicId=${sessionStorage.getItem(
+      "tid"
+    )}`;
+    fetch(url, {
+      method: "get",
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        // console.log(data);
+        this.content = data.content;
+        this.num = data.likeNum;
+        this.comments = data.commentNum;
+        this.title = data.title;
+      });
+    this.getRootComments();
+  },
   data() {
     return {
       mycomment: ``,
       emojis: ["👍", "👎", "😆", "🎉", "😟", "💝", "🚀", "👀"],
-      arr: [
-        {
-          avatar: `https://gitee.com/Langwenchong/figure-bed/raw/master/author.jpeg`,
-          name: `法法师`,
-          time: `2020-09-18`,
-          content: `哈哈哈哈lorem实现原理：首先获取数据，然后传递给子组件，然后通过$emit函数触发父组件事件，更新父组件的数据，那么传递给子组件的数据也就更新了，在实现子组件更新数据的时候，传递过来的是一个对象，那么我们就需要深度监听对象。实现双向绑定。`,
-          like: 20,
-          comments: [
-            {
-              avatar: `https://pengpenglang.cn/img/avatar.jpg`,
-              name: `个傻瓜式人个`,
-              time: `2021-09-21`,
-              content: `发发发`,
-              like: 9,
-            },
-            {
-              avatar: `https://code.bdstatic.com/npm/logicdn@1.0.0/logi.im/usr/images/global/logo.webp`,
-              name: `过生日过生日`,
-              time: `2021-10-21`,
-              content: `法师法师果然是`,
-              like: 9,
-            },
-            {
-              avatar: `https://image.bestzuo.cn/images/efdc8f3a96e979c21a20b8885fc5dab2.jpeg!getwebp`,
-              name: `个傻瓜式个傻瓜式`,
-              time: `2021-12-07`,
-              content: `阿果然是过生日按格式`,
-              like: 9,
-            },
-          ],
-        },
-        {
-          avatar: `https://gitee.com/Langwenchong/figure-bed/raw/master/author.jpeg`,
-          name: `法法师`,
-          time: `2020-09-18`,
-          content: `哈哈哈哈lorem实现原理：首先获取数据，然后传递给子组件，然后通过$emit函数触发父组件事件，更新父组件的数据，那么传递给子组件的数据也就更新了，在实现子组件更新数据的时候，传递过来的是一个对象，那么我们就需要深度监听对象。实现双向绑定。`,
-          like: 20,
-          comments: [
-            {
-              avatar: `https://code.bdstatic.com/npm/logicdn@1.0.0/logi.im/usr/images/global/logo.webp`,
-              name: `过生日过生日`,
-              time: `2021-10-21`,
-              content: `法师法师果然是`,
-              like: 9,
-            },
-            {
-              avatar: `https://image.bestzuo.cn/images/efdc8f3a96e979c21a20b8885fc5dab2.jpeg!getwebp`,
-              name: `个傻瓜式个傻瓜式`,
-              time: `2021-12-07`,
-              content: `阿果然是过生日按格式`,
-              like: 9,
-            },
-          ],
-        },
-        {
-          avatar: `https://gitee.com/Langwenchong/figure-bed/raw/master/author.jpeg`,
-          name: `法法师`,
-          time: `2020-09-18`,
-          content: `哈哈哈哈lorem实现原理：首先获取数据，然后传递给子组件，然后通过$emit函数触发父组件事件，更新父组件的数据，那么传递给子组件的数据也就更新了，在实现子组件更新数据的时候，传递过来的是一个对象，那么我们就需要深度监听对象。实现双向绑定。`,
-          like: 20,
-          comments: [
-            {
-              avatar: `https://pengpenglang.cn/img/avatar.jpg`,
-              name: `个傻瓜式人个`,
-              time: `2021-09-21`,
-              content: `发发发`,
-              like: 9,
-            },
-            {
-              avatar: `https://code.bdstatic.com/npm/logicdn@1.0.0/logi.im/usr/images/global/logo.webp`,
-              name: `过生日过生日`,
-              time: `2021-10-21`,
-              content: `法师法师果然是`,
-              like: 9,
-            },
-          ],
-        },
-      ],
+      arr: [],
       num: 1831,
       comments: 70,
       title: `一年内的前端看不懂前端框架源码怎么办？`,
@@ -293,12 +235,182 @@ export default {
     };
   },
   methods: {
+    getIsLike(arr) {
+      for (let i = 0; i < arr.length; i++) {
+        var likeurl = `https://vclass.api.cheeseburgerim.space/comment/api/isLikeComment?commentId=${
+          arr[i].commentId
+        }&username=${sessionStorage.getItem("userName")}`;
+        fetch(likeurl, {
+          method: `get`,
+          credentials: `include`,
+        })
+          .then((res) => res.text())
+          .then((data) => {
+            if (data === `true`) {
+              arr[i].isLike = true;
+            } else if (data === `false`) {
+              arr[i].isLike = false;
+            } else {
+              this.$notify.error({
+                title: "错误",
+                message:
+                  "您现在是游客身份或者登录身份信息已过期，无权限编辑个人信息哦😶，3s后将跳转到登录界面！",
+              });
+              setTimeout(() => {
+                this.$router.push({ name: "login" });
+              }, 3000);
+            }
+          });
+      }
+    },
+    getRootComments() {
+      const commenturl1 = `https://vclass.api.cheeseburgerim.space/comment/api/getRoot?topicId=${sessionStorage.getItem(
+        "tid"
+      )}`;
+      fetch(commenturl1, {
+        method: `get`,
+        credentials: "include",
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          // console.log(data);
+          this.arr = [];
+          for (let i = 0; i < data.length; i++) {
+            let obj = {};
+            obj.commentId = data[i].commentId;
+            obj.content = data[i].content;
+            obj.name = data[i].username;
+            obj.time = data[i].timestamp;
+            obj.like = data[i].like;
+            obj.comments = [];
+            obj.isLike = false;
+            this.arr.push(obj);
+          }
+          this.getIsLike(this.arr);
+          this.getAvatar(this.arr);
+          this.getChildComments();
+        });
+    },
+    getAvatar(arr) {
+      for (let i = 0; i < arr.length; i++) {
+        var avatarurl = `https://vclass.api.cheeseburgerim.space/user/api/getAvatar?username=${arr[i].name}`;
+        fetch(avatarurl, {
+          method: "get",
+          credentials: "include",
+        })
+          .then((res) => res.text())
+          .then((data) => {
+            arr[i].avatar = `http://vclass.static.cheeseburgerim.space` + data;
+            if (data === `//VClass//static//defaultAvatar.jpg`) {
+              arr[i].avatar = `https://vclass.api.cheeseburgerim.space` + data;
+            }
+          })
+          .catch((error) => {
+            this.$notify.error({
+              title: "错误",
+              message: "后台出现图片存储异常，暂时使用默认头像😑",
+            });
+          });
+      }
+    },
+    getChildComments() {
+      for (let j = 0; j < this.arr.length; j++) {
+        var commenturl2 = `https://vclass.api.cheeseburgerim.space/comment/api/getChild?topicId=${sessionStorage.getItem(
+          "tid"
+        )}&rootCommentId=${this.arr[j].commentId}`;
+        fetch(commenturl2, {
+          method: "get",
+          credentials: "include",
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            for (let i = 0; i < data.length; i++) {
+              let obj = {};
+              obj.commentId = data[i].commentId;
+              obj.content = data[i].content;
+              obj.name = data[i].username;
+              obj.time = data[i].timestamp;
+              obj.like = data[i].like;
+              obj.isLike = false;
+              this.arr[j].comments.push(obj);
+              this.getAvatar(this.arr[j].comments);
+              this.getIsLike(this.arr[j].comments);
+            }
+          });
+      }
+    },
+    currentTime() {
+      var now = new Date();
+      var year = now.getFullYear(); //年
+      var month = now.getMonth() + 1; //月
+      var day = now.getDate(); //日
+
+      var hh = now.getHours(); //时
+      var mm = now.getMinutes(); //分
+      var ss = now.getSeconds();
+
+      var clock = year + "-";
+      if (month < 10) clock += "0";
+      clock += month + "-";
+      if (day < 10) clock += "0";
+      clock += day + " ";
+      if (hh < 10) clock += "0";
+      clock += hh + ":";
+      if (mm < 10) clock += "0";
+      clock += mm + ":";
+      if (ss < 10) clock += "0";
+      clock += ss;
+      return clock;
+    },
+    addRoot() {
+      if (this.mycomment === ``) {
+        this.$notify.error({
+          title: "发布错误",
+          message: "❌请确保话题内容不为空!",
+        });
+        return;
+      }
+      const commenturl2 = `https://vclass.api.cheeseburgerim.space/comment/api/addRoot`;
+      let fd = new FormData();
+      fd.append("username", sessionStorage.getItem("userName"));
+      fd.append("topicId", sessionStorage.getItem("tid"));
+      fd.append("content", this.mycomment);
+      fd.append("timestamp", this.currentTime());
+      fetch(commenturl2, {
+        method: "post",
+        credentials: "include",
+        body: fd,
+      })
+        .then((res) => res.text())
+        .then((data) => {
+          // console.log(data);
+          if (data === `success`) {
+            this.$notify({
+              title: "评论成功",
+              message: "评论成功发布啦✅",
+              type: "success",
+            });
+            //刷新评论
+            this.mycomment = ``;
+            this.getRootComments();
+          } else {
+            this.$notify.error({
+              title: "错误",
+              message:
+                "您现在是游客身份或者登录身份信息已过期，无权限编辑个人信息哦😶，3s后将跳转到登录界面！",
+            });
+            // setTimeout(() => {
+            //   this.$router.push({ name: "login" });
+            // }, 3000);
+          }
+        });
+    },
     addEmotion(e) {
       this.mycomment += e;
     },
-    backup(){
-      this.$router.push({name:'TopicList'})
-    }
+    backup() {
+      this.$router.push({ name: "TopicList" });
+    },
   },
 };
 </script>

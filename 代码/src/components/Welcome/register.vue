@@ -188,7 +188,7 @@ export default {
                   .then((res) => res.text())
                   .then((data) => {
                     if (data === `success`) {
-                      this.$router.push("/Dashboard/Index");
+                      this.$router.push("/Dashboard/Recommend");
                     } else {
                       alert(data);
                     }

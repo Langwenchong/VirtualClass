@@ -16,7 +16,7 @@ import chart from '@/components/DashBoard/Recommend/Course/chart.vue'
 import radar from '@/components/DashBoard/Recommend/Course/radar.vue'
 import CourseList from '@/components/DashBoard/Recommend/Course/CourseList.vue'
 import CourseSettings from '@/components/DashBoard/Recommend/Course/CourseSettings.vue'
-import Index from '@/components/DashBoard/Index.vue'
+import SearchResult from '@/components/DashBoard/SearchResult.vue'
 import log from '@/components/DashBoard/Recommend/Course/log.vue'
 import Calendar from '@/components/DashBoard/Recommend/Course/Calendar.vue'
 import Mind from '@/components/DashBoard/Recommend/Course/Mind.vue'
@@ -24,7 +24,6 @@ import Mind from '@/components/DashBoard/Recommend/Course/Mind.vue'
 import TopicList from '@/components/DashBoard/Recommend/Discussion/TopicList.vue'
 import TopicEditor from '@/components/DashBoard/Recommend/Discussion/TopicEditor.vue'
 import Topicbbs from '@/components/DashBoard/Recommend/Discussion/Topicbbs.vue'
-
 Vue.use(Router)
 
 export default new Router({
@@ -67,9 +66,9 @@ export default new Router({
       name: 'DashBoard',
       component: DashBoard,
       children: [{
-          path: 'Index',
-          name: 'Index',
-          component: Index,
+          path: 'SearchResult',
+          name: 'SearchResult',
+          component: SearchResult,
         },
         {
           path: 'Recommend',

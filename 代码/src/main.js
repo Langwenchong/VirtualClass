@@ -28,7 +28,11 @@ Vue.config.productionTip = false
 router.beforeEach(function (to, from, next) {
   if (from.name != "login" && from.name != "root" && to.name === "login") {
     sessionStorage.setItem("userName", "");
-    sessionStorage.setItem("sessionId", "");
+    // sessionStorage.setItem("sessionId", "");
+    sessionStorage.setItem("fid", "");
+    sessionStorage.setItem("tid", "");
+    sessionStorage.setItem("teacherUsername", "");
+    sessionStorage.setItem("cname", "");
     sessionStorage.setItem("userStatus", "");
     sessionStorage.setItem("userImage", "");
     next();

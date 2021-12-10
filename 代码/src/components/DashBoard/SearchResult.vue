@@ -5,7 +5,7 @@
         <img
           src="../../../static/images/icon1.png"
           height="30px"
-        />全部课程&nbsp;
+        />为您搜索<strong>{{courses.length}}</strong>门课程&nbsp;
         <i class="fad fa-angle-double-right"></i>
       </p>
       <div class="info-gallery">
@@ -40,20 +40,17 @@
 <script>
 export default {
   created() {
-    const url = `https://vclass.api.cheeseburgerim.space/course/api/getAllCourse`;
+    var url = `https://vclass.api.cheeseburgerim.space/course/api/search?keyword=${sessionStorage.getItem(
+      "search"
+    )}`;
     fetch(url, {
-      method: "get",
-      credentials: "include",
+      method: `get`,
+      credentials: `include`,
     })
       .then((res) => res.json())
       .then((data) => {
+        // console.log(data);
         this.courses = data;
-      })
-      .catch((error) => {
-        this.$notify.error({
-          title: "错误",
-          message: "服务器崩溃了~后台小哥哥正在紧急修复中🛠️！",
-        });
       });
   },
   data() {
@@ -81,7 +78,7 @@ export default {
       // console.log("goto!");
     },
   },
-  name: "Index",
+  name: "SearchResult",
 };
 </script>
 
@@ -95,6 +92,9 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+#Index strong{
+  color: var(--text4);
 }
 #Index p {
   margin: 0;
@@ -121,12 +121,13 @@ export default {
   width: 100%;
   /* min-height: 100vh; */
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   flex-wrap: wrap;
   /* background:pink; */
 }
 #Index .main .info-gallery .wrapper .card {
-  width: 19%;
+  margin-left: 25px;
+  width: 232px;
   background: #fff;
   height: 320px;
   border-radius: 8px;
@@ -219,8 +220,9 @@ export default {
   align-items: center;
   color: var(--text1);
   margin-bottom: 20px;
+  letter-spacing: 4px;
 }
-#Index .main .wall:before {
+/* #Index .main .wall:before {
   position: absolute;
   content: "";
   top: 50%;
@@ -228,5 +230,10 @@ export default {
   width: 85%;
   height: 50%;
   border-top: 1px dashed var(--text1);
+} */
+@media screen and (max-width:630px) {
+  #Index .main{
+    padding: 0 5px;
+  }
 }
 </style>

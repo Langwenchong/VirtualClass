@@ -25,8 +25,8 @@
       </div>
       <ul class="nav_list">
         <li>
-          <i class="bx bx-search"></i>
-          <input type="text" placeholder="Search Class..." />
+          <i class="bx bx-search" @click="searchCourse"></i>
+          <input type="text" placeholder="Search Class..." v-model="search" />
           <span class="tooltip">搜索</span>
         </li>
         <li>
@@ -120,8 +120,8 @@ export default {
         .then((res) => res.text())
         .then((data) => {
           this.avatar = `http://vclass.static.cheeseburgerim.space` + data;
-           if(data===`//VClass//static//defaultAvatar.jpg`){
-            this.avatar = `http://vclass.static.cheeseburgerim.space` + data;
+          if (data === `//VClass//static//defaultAvatar.jpg`) {
+            this.avatar = `https://vclass.api.cheeseburgerim.space` + data;
           }
         })
         .catch((error) => {
@@ -179,12 +179,15 @@ export default {
         btn.classList.replace("bx-menu-alt-right", "bx-menu");
       }
     };
-    searchBtn.onclick = function () {
-      sidebar.classList.toggle("active");
-    };
+    // searchBtn.onclick = function () {
+    //   sessionStorage.setItem("search", this.search);
+    //   this.$router.push({ name: "SearchResult" });
+    //    sidebar.classList.toggle("active");
+    // };
   },
   data() {
     return {
+      search: ``,
       name: ``,
       avatar: ``,
       status: ``,
@@ -194,6 +197,18 @@ export default {
     };
   },
   methods: {
+    searchCourse() {
+      let sidebar = document.querySelector(".sidebar");
+      if (this.search === ``) {
+        return;
+      }
+      sessionStorage.setItem("search", this.search);
+      this.$router.push({ name: "Account" });
+      this.$router.push({ name: "SearchResult" });
+
+      sidebar.classList.toggle("active");
+      this.search = ``;
+    },
     logout() {
       if (
         sessionStorage.getItem("sessionId") != "" &&
@@ -202,7 +217,7 @@ export default {
         // alert("您已经不是登录状态了");
         this.dialogMessage = `如果要退出,当前未保存的操作将无法保留,您确定要登出账号吗❓`;
         var username = sessionStorage.getItem("userName");
-        const url = `https://vclass.api.cheeseburgerim.space/user/api/logout?username=${username}`;
+        var url = `https://vclass.api.cheeseburgerim.space/user/api/logout?username=${username}`;
         fetch(url, {
           method: "get",
           credentials: "include",
@@ -281,7 +296,7 @@ export default {
       }
     },
   },
-  name: "Dashboard",
+  name: "DashBoard",
 };
 </script>
 

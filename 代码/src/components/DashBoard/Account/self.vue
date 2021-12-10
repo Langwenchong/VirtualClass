@@ -65,7 +65,7 @@ export default {
           // console.log(data);
           this.avatar = `http://vclass.static.cheeseburgerim.space` + data;
           if (data === `//VClass//static//defaultAvatar.jpg`) {
-            this.avatar = `http://vclass.static.cheeseburgerim.space` + data;
+            this.avatar = `http://vclass.api.cheeseburgerim.space` + data;
           }
           sessionStorage.setItem("userImage", this.avatar);
         })
