@@ -4,17 +4,17 @@
       <div class="l-wrapper">
         <div class="inner-box">
           <div id="logo">
-            <img src="../../../static/images/logo.png" height="100%" alt="logo" />
+            <!-- <img src="../../../static/images/logo.png" height="100%" alt="logo" /> -->
           </div>
-          <h2>云端虚拟教研室共享平台</h2>
+          <h2>云端虚拟教研室系统 </h2>
           <div class="main">
             <div class="header">
-              <span class="name">李幼萌</span>
-              <span class="status">VClass 指导教师</span>
+              <span class="name">小明</span>
+              <span class="status">指导教师</span>
             </div>
             <div
               class="content"
-            >是的，VClass 还有很多问题，远远不完美，但一直在解决。高级CV攻城狮团队是我见过的最优秀的开发团队，认真做产品，有耐心不功利，所以我相信 VClass 一定会做的很好。</div>
+            >是的，VCLASS 还有很多问题，远远不完美，但一直在解决。高级CV攻城狮团队是我见过的最优秀的开发团队，认真做产品，有耐心不功利，所以我相信 VClass 一定会做的很好。</div>
           </div>
           <div class="innerBox-bg">
             <img src="../../../static/images/tju.png" />

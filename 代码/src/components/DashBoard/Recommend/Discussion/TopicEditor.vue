@@ -241,7 +241,7 @@ export default {
     // },
     submit() {
       this.$refs.coverImageUpload.submit();
-      const addurl = `https://vclass.api.cheeseburgerim.space/topic/api/add`;
+      var addurl = `https://vclass.api.cheeseburgerim.space/topic/api/addTopicWithoutCover`;
       if (this.content != `` && this.title != `` && this.description != ``) {
         let fd = new FormData();
         fd.append("username", sessionStorage.getItem("userName"));
@@ -252,7 +252,7 @@ export default {
         fd.append("topicId", this.tid);
         fd.append("description", this.description);
         if (this.coverImage != null) {
-          // console.log(`hhhh`)
+          addurl=`https://vclass.api.cheeseburgerim.space/topic/api/addTopicWithCover`
           fd.append("coverImage", this.coverImage);
         }
         fetch(addurl, {

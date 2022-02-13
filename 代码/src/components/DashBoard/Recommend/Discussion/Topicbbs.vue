@@ -141,7 +141,7 @@
     </div>
     <div id="question" class="animate__animated animate__fadeIn">
       <div class="ql-container ql-snow">
-        <div class="content ql-editor" v-html="content" />
+        <div class="content ql-editor" v-html="content1" />
       </div>
     </div>
     <div id="comments" class="animate__animated animate__fadeIn">
@@ -228,7 +228,7 @@ export default {
       num: 1831,
       comments: 70,
       title: `一年内的前端看不懂前端框架源码怎么办？`,
-      content: `
+      content1: `
           <h1 class="ql-align-center"><span class="ql-font-serif" style="background-color: rgb(240, 102, 102); color: rgb(255, 255, 255);"> I am snow example! </span></h1><p><br></p><p><span class="ql-font-serif">W Can a man still be brave if he's afraid? That is the only time a man can be brave. </span></p><p><br></p><p><strong class="ql-font-serif ql-size-large">Courage and folly is </strong><strong class="ql-font-serif ql-size-large" style="color: rgb(230, 0, 0);">always</strong><strong class="ql-font-serif ql-size-large"> just a fine line.</strong></p><p><br></p><p><u class="ql-font-serif">There is only one God, and his name is Death. And there is only one thing we say to Death: "Not today."</u></p><p><br></p><p><em class="ql-font-serif">Fear cuts deeper than swords.</em></p><p><br></p><pre class="ql-syntax" spellcheck="false"><span class="hljs-keyword">const</span> a = <span class="hljs-number">10</span>;
          
         `,
@@ -275,7 +275,7 @@ export default {
         .then((data) => {
           // console.log(data);
           this.arr = [];
-          for (let i = 0; i < data.length; i++) {
+          for (let i = data.length - 1; i > -1; i--) {
             let obj = {};
             obj.commentId = data[i].commentId;
             obj.content = data[i].content;
